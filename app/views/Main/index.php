@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             <div class="4u 12u$(xsmall)"></div>
-            <div class="4u 12u$(xsmall)"><img src="/public/images/CEMB.jpg" width="100%" style="border-radius: 50%;"></div>
+<!--            <div class="4u 12u$(xsmall)"><img src="/public/images/CEMB.jpg" width="100%" style="border-radius: 50%;"></div>-->
             <div class="4u 12u$(xsmall)"></div>
         </div>
     </div>

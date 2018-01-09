@@ -8,9 +8,6 @@
         <p>Больше объединить всех капоэйристов ABADÁ-Capoeira со всей планеты на просторах интернета.</p>
         <hr class="major" />
         <h3>Описание</h3>
-        <p>Данный сайт также как и канал в Vk являются некоммерческими. Полностью поддерживаются и развиваются командой альтруистов.
-        В планах у нас много идей, которые бы хотели реализовать для достижения главной цели. О том, как развивается
-        сайт: что было сделано, что хотим сделать и т.д. касаемо проекта, можно наблюдать <a href="https://www.patreon.com/mikkou">здесь</a>.</p>
         <p>На сайте Вы можете найти:</p>
         <ul>
             <li><a href="/events?lang=<?=$lang?>">Список событий</a>. В него входят: семинары, батизады, жогосы и др. - только грядущие. Вся информация
@@ -57,9 +54,6 @@
         <p>More to unite all capoeristas ABADÁ-Capoeira from the whole planet on the internet.</p>
         <hr class="major" />
         <h3>Description</h3>
-        <p>This site as well as channel  in Vk are non-commercial. Fully supported and develops a team of altruists.
-            In plans we have a lot of ideas, which wanted realisation for our main goal. About how develops site: what was done,
-            what wanted do and so on, you can see <a href="https://www.patreon.com/mikkou">here</a>.</p>
         <p>On site you can find:</p>
         <ul>
             <li><a href="/events?lang=<?=$lang?>">Events list</a>. It includes: seminars, batizados, jogos and another - only which
