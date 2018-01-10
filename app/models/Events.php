@@ -51,6 +51,9 @@ class Events extends Model
             ['description', 4096],
             ['house', 4],
             ['block', 3],
+        ],
+        'max' => [
+            ['image_size', 500000]
         ]
     ];
 

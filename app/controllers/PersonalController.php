@@ -157,7 +157,16 @@ class PersonalController extends AppController
                 ['link'],
                 ['site']
             ],
+            'max' => [
+                ['image_size', 500000]
+            ]
         ];
+
+        // for checking size of image
+        if (!empty($_FILES)) {
+            $data['image_size'] = $_FILES['image']['size'];
+            self::$model->attributes['image_size'] = '';
+        }
 
         self::$model->load($data);
 
@@ -165,6 +174,11 @@ class PersonalController extends AppController
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
+        }
+
+        if (isset(self::$model->attributes['image_size'])) {
+            unset(self::$model->attributes['image_size']);
+            unset($data['image_size']);
         }
 
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
@@ -193,7 +207,7 @@ class PersonalController extends AppController
         $lang = $params['lang'];
         $event = self::$model->getEventById($params['id'], $lang);
         $categories = self::$model->getEventsCategories();
-        $toggleCategory = $categories[(int)$event['category']]['name'];
+        $toggleCategory = $categories[(int)$event['category']][$lang];
         unset($categories[(int)$event['category']]);
         $checked = ($event['event_type'] === '1') ? 'checked' : '';
         $title = ($lang === 'en') ? 'Edit event' : 'Редактировать событие';
@@ -239,8 +253,17 @@ class PersonalController extends AppController
                 ['description', 4096],
                 ['house', 4],
                 ['block', 3]
+            ],
+            'max' => [
+                ['image_size', 500000]
             ]
         ];
+
+        // for checking size of image
+        if (!empty($_FILES)) {
+            $data['image_size'] = $_FILES['image']['size'];
+            self::$model->attributes['image_size'] = '';
+        }
 
         self::$model->load($data);
 
@@ -248,6 +271,11 @@ class PersonalController extends AppController
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
+        }
+
+        if (isset(self::$model->attributes['image_size'])) {
+            unset(self::$model->attributes['image_size']);
+            unset($data['image_size']);
         }
 
         if (isset($data['event_type'])) {

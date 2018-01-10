@@ -19,7 +19,7 @@ class MainController extends AppController
     public function indexAction()
     {
         // check auth
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if (isset($_SESSION['admin'])) {
             View::setMeta('Админка :: Главная страница');
         } else {
@@ -49,7 +49,7 @@ class MainController extends AppController
 
     public function eventsAction()
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getEventsData();
         View::setMeta('События');
         $this->set(compact('data'));
@@ -63,7 +63,7 @@ class MainController extends AppController
 
     public function usersAction()
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getUsers();
         View::setMeta('Пользователи');
         $this->set(compact('data'));

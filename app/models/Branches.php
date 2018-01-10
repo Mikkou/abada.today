@@ -36,6 +36,9 @@ class Branches extends Model
             // TODO not validate russian url, for example "http://капоэйра-детям.рф"
 //            ['site']
         ],
+        'max' => [
+            ['image_size', 500000]
+        ]
     ];
 
     public function getBranch($id, $lang = '')

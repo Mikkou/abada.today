@@ -17,7 +17,7 @@ class EventsController extends AppController
 
     public function editAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $event = self::$model->getEventById($params['id'], 'ru');
         $categories = self::$model->getEventsCategories();
         if (is_null($event['category'])) {
@@ -33,7 +33,7 @@ class EventsController extends AppController
 
     public function saveEventAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = $params;
         self::$model->attributes = [
             'name' => '',
@@ -69,8 +69,17 @@ class EventsController extends AppController
                 ['description', 4096],
                 ['house', 4],
                 ['block', 3]
+            ],
+            'max' => [
+                ['image_size', 500000]
             ]
         ];
+
+        // for checking size of image
+        if (!empty($_FILES)) {
+            $data['image_size'] = $_FILES['image']['size'];
+            self::$model->attributes['image_size'] = '';
+        }
 
         self::$model->load($data);
 
@@ -78,6 +87,11 @@ class EventsController extends AppController
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
+        }
+
+        if (isset(self::$model->attributes['image_size'])) {
+            unset(self::$model->attributes['image_size']);
+            unset($data['image_size']);
         }
 
         if (isset($data['event_type'])) {
@@ -120,7 +134,7 @@ class EventsController extends AppController
 
     public function addAction()
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
 
         self::$model->attributes = [
@@ -161,17 +175,33 @@ class EventsController extends AppController
                 ['description', 4096],
                 ['house', 4],
                 ['block', 3],
+            ],
+            'max' => [
+                ['image_size', 500000]
             ]
         ];
 
         $data = $_POST;
-        if (!empty($data)) {
+        if (isset($data['category'])) {
+
+            // for checking size of image
+            if (!empty($_FILES)) {
+                $data['image_size'] = $_FILES['image']['size'];
+                self::$model->attributes['image_size'] = '';
+            }
+
             self::$model->load($data);
             if (!self::$model->validate($data)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
+
+            if (isset(self::$model->attributes['image_size'])) {
+                unset(self::$model->attributes['image_size']);
+                unset($data['image_size']);
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }
@@ -209,12 +239,12 @@ class EventsController extends AppController
 
     public function deleteAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params)) redirect();
         $id = (int)$params['id'];
         if ($id === 0) redirect();
         self::$model->deleteEvent($id);
         $this->view = false;
-        redirect('/admin/user/events');
+        redirect('/admin/main/events');
     }
 }

@@ -191,7 +191,7 @@ abstract class Model
 
     public function getEventById($id, $lang)
     {
-        $data = $this->query("SELECT e.name, e.begin_date, e.end_date, e.organizer, e.street, e.house, e.block,
+        $data = $this->query("SELECT e.id, e.name, e.begin_date, e.end_date, e.organizer, e.street, e.house, e.block,
                                         e.guest, e.professor, e.image, e.vk, e.category, e.description, e.event_type,
                                         e.user_id, e.coord_x, e.coord_y, co.{$lang} AS country, ci.{$lang} AS city,
                                         concat(co.{$lang}, ', ', ci.{$lang}, ', ', e.street, ', ', e.house,
@@ -213,12 +213,12 @@ abstract class Model
         return str_replace("\r\n", "<br>", $desc);
     }
 
-    public function getEventsCategories():array
+    public function getEventsCategories()
     {
       return $this->query("SELECT * FROM events_categories");
     }
 
-    public function getAllBranches($lang):array
+    public function getAllBranches($lang)
     {
         $data = $this->query("SELECT b.id, b.house, b.block, b.image, b.phone,
             u.nickname, u.lastname, u.firstname, b.user_id, b.curator,
@@ -231,7 +231,7 @@ abstract class Model
         return $data;
     }
 
-    public function getAllCountries($lang = 'en, ru'):array
+    public function getAllCountries($lang = 'en, ru')
     {
         $data = $this->query("SELECT id, {$lang} FROM countries ORDER BY {$lang}");
         return $data;
@@ -242,5 +242,16 @@ abstract class Model
         $this->table = 'branches';
         $data = $this->findOne($id)[0];
         return $data;
+    }
+
+    public function putNewCity($countryId, $city, $lang)
+    {
+        $existing = $this->query("SELECT * FROM cities WHERE {$lang} = '{$city}'");
+        if ($existing) {
+            return $existing[0]['id'];
+        } else {
+            $this->query("INSERT INTO cities (country_id, {$lang}) VALUES ({$countryId}, '{$city}')");
+            return $this->query("SELECT id FROM cities WHERE {$lang} = '{$city}'")[0]['id'];
+        }
     }
 }

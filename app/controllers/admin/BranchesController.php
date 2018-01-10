@@ -18,7 +18,7 @@ class BranchesController extends AppController
 
     public function indexAction()
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getAllBranches('ru');
         View::setMeta('Админка :: Филиалы');
         $this->set(compact('data', 'address'));
@@ -26,7 +26,7 @@ class BranchesController extends AppController
 
     public function editAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
         if (!isset($_SESSION['admin'])) redirect('/');
         $branch = self::$model->getBranch($params['id']);
@@ -36,7 +36,7 @@ class BranchesController extends AppController
 
     public function saveBranchAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = $params;
         self::$model->attributes = [
             'country' => '',
@@ -66,7 +66,16 @@ class BranchesController extends AppController
                 ['link'],
 //                ['site']
             ],
+            'max' => [
+                ['image_size', 500000]
+            ]
         ];
+
+        // for checking size of image
+        if (!empty($_FILES)) {
+            $data['image_size'] = $_FILES['image']['size'];
+            self::$model->attributes['image_size'] = '';
+        }
 
         self::$model->load($data);
 
@@ -74,6 +83,11 @@ class BranchesController extends AppController
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
+        }
+
+        if (isset(self::$model->attributes['image_size'])) {
+            unset(self::$model->attributes['image_size']);
+            unset($data['image_size']);
         }
 
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
@@ -98,7 +112,7 @@ class BranchesController extends AppController
 
     public function deleteAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
         self::$model->deleteObj($params['id'], 'branches');
         $_SESSION['success'] = 'Филиал был успешно удален.';
@@ -109,15 +123,28 @@ class BranchesController extends AppController
 
     public function addAction($data)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 49) redirect();
-        if (!empty($data)) {
+        if (isset($data['country'])) {
+
+            // for checking size of image
+            if (!empty($_FILES)) {
+                $data['image_size'] = $_FILES['image']['size'];
+                self::$model->attributes['image_size'] = '';
+            }
+
             self::$model->load($data);
             if (!self::$model->validate($data)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
+
+            if (isset(self::$model->attributes['image_size'])) {
+                unset(self::$model->attributes['image_size']);
+                unset($data['image_size']);
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }

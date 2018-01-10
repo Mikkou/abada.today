@@ -36,6 +36,9 @@ class Branches extends Model
             ['link'],
             ['site']
         ],
+        'max' => [
+            ['image_size', 500000]
+        ]
     ];
 
     public function getAddress($data)

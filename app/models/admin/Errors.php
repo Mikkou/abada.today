@@ -21,6 +21,7 @@ class Errors extends Model
         $cleanErros = [];
         foreach ($dirtArrayErrors as $k => $v) {
 
+            if (empty($v)) continue;
             if (strpos($v, '=======') === false) {
                 $singleError = [];
                 $a = explode('|', trim($v));

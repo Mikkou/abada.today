@@ -76,7 +76,7 @@
                     <div class="select-wrapper">
                         <select name="category">
                             <?php foreach ($categories as $value) { ?>
-                                <option value="<?= $value['id']?>"><?= $value['name']?></option>
+                                <option value="<?= $value['id']?>"><?= $value['ru']?></option>
                             <?php } ?>
                         </select>
                     </div>

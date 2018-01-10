@@ -68,6 +68,15 @@ $().ready(function () {
                             `;
                             }
 
+                            var image = '';
+                            if (v.image) {
+                                image += `
+                               <a href="/events?id=` + v.id + `" style="border: none;">
+                                  <img class="mr-3" src="` + v.image + `">
+                               </a>
+                            `
+                            };
+
                             var address = '';
                             if (v.city) {
                                 address = v.country + ', ' + v.city;
@@ -77,10 +86,8 @@ $().ready(function () {
 
                             var html = `
                             <div class="row event">
-                                <div class="3u 12u$(medium)">
-                                    <a href="/events?id=` + v.id + `" style="border: none;">
-                                        <img class="mr-3" src="` + v.image + `">
-                                    </a>
+                                <div class="3u 12u$(medium)" style="width: 150px;">
+                                    ` + image + `
                                 </div>
                                 <div class="9u 12u$(medium)">
                                     <div class="row types-event-title">
@@ -153,7 +160,7 @@ $().ready(function () {
                     loadCities();
                 }
                 if ($(this).val() === 'another') {
-                    newCity();
+                    addNewCity();
                 }
             });
 
@@ -355,7 +362,7 @@ function getParamFromHref(param) {
         var query = href.split('?')[1];
         if (query.indexOf('&') === -1) {
             let a = query.split('=');
-            array[a[0]] = a[1];query.split
+            array[a[0]] = a[1];
         }
     } else {
         alert("In href don't have any params");
@@ -370,22 +377,18 @@ function getParamFromHref(param) {
     }
 }
 
-$("#country, #city").change(function (e) {
-    if (e.target.id === 'country') {
-        loadCities();
-    }
-    if ($(this).val() === 'another') {
-        newCity();
-    }
-});
-
-function newCity() {
+function addNewCity() {
     var newCity = prompt('Напишите желаемый город');
     var selCity = 'select#city';
     if (newCity) {
-        $('option[value="new"]').detach();
-        $(selCity).append(`<option value="new">` + newCity + `</option>`);
-        $(selCity).val('new');
+        if (existDublicateCity(newCity)) {
+            alert('Введенный населенный пункт уже существует в списке выбора.');
+            $(selCity).val('');
+            return false;
+        }
+        $('option[class="new-city"]').detach();
+        $(selCity).append(`<option class="new-city" value="new_` + newCity + `">` + newCity + `</option>`);
+        $(selCity).val(`new_` + newCity);
     } else {
         $(selCity).val('');
     }
@@ -409,8 +412,20 @@ function loadCities() {
             html += `<option value=""></option>`;
             html += `<option value="another">....` + LANG.another + `....</option>`;
 
-
             $('select#city').html(html);
         }
     })
+}
+
+function existDublicateCity(newCity) {
+    var obj = $('select#city option');
+
+    for (var i = 0; i < obj.length; i++) {
+        var cityInOption = $(obj[i]).text();
+        if (cityInOption === newCity) {
+            return true;
+        }
+    }
+
+    return false;
 }

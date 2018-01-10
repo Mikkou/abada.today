@@ -65,7 +65,7 @@ class EventsController extends AppController
         }
     }
 
-    public function getCategoryName($event, $lang): string
+    public function getCategoryName($event, $lang)
     {
         $str = '';
         if (is_null($event['category'])) {
@@ -121,11 +121,14 @@ class EventsController extends AppController
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
         if (isset($data['category'])) {
 
-            dump($data);
-            die;
-
             unset($data['langText']);
             unset($data['lang']);
+
+            // for checking size of image
+            if (!empty($_FILES)) {
+                $data['image_size'] = $_FILES['image']['size'];
+                self::$model->attributes['image_size'] = '';
+            }
 
             self::$model->load($data);
             if (!self::$model->validate($data)) {
@@ -133,6 +136,12 @@ class EventsController extends AppController
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
+
+            if (isset(self::$model->attributes['image_size'])) {
+                unset(self::$model->attributes['image_size']);
+                unset($data['image_size']);
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }
@@ -143,8 +152,12 @@ class EventsController extends AppController
               $data['event_type'] = 0;
             }
 
+            // save new city
             if (isset($data['city'])) {
-
+                if (strpos($data['city'], 'new_') === 0) {
+                    $cleanCity = str_replace('new_', '', $data['city']);
+                    $data['city'] = self::$model->putNewCity($data['country'], $cleanCity, $lang);
+                }
             }
 
             $data['category'] = (int)$data['category'];
@@ -156,7 +169,7 @@ class EventsController extends AppController
             if (self::$model->save('events')) {
                 $_SESSION['success'] = 'Событие успешно было добавлено.';
                 self::$model->refreshUserSession();
-                redirect('/');
+                redirect('/personal');
             } else {
                 $_SESSION['error'] = 'Ошибка! Событие не было добавлено. Обратитесь пожалуйста в техподдержку.';
                 redirect('/events/add');
@@ -177,7 +190,7 @@ class EventsController extends AppController
         echo $events;
     }
 
-    public function getAddressStr($data): string
+    public function getAddressStr($data)
     {
         $str = '';
         if (isset($data['country'])) {
@@ -217,7 +230,7 @@ class EventsController extends AppController
         echo json_encode($events);
     }
 
-    public function modifiedCat($cat):array
+    public function modifiedCat($cat)
     {
         $count = count($cat);
         for ($i = 0; $i < $count; $i++) {

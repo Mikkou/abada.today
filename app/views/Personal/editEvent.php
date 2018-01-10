@@ -61,7 +61,7 @@
               <select name="category">
                 <option value="<?= $event['category']?>"><?= $toggleCategory?></option>
                 <?php foreach ($categories as $value) { ?>
-                  <option value="<?= $value['id']?>"><?= $value['name']?></option>
+                  <option value="<?= $value['id']?>"><?= $value[$lang]?></option>
                 <?php } ?>
               </select>
             </div>

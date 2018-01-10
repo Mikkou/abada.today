@@ -40,12 +40,25 @@ class BranchesController extends AppController
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
         if (isset($data['country'])) {
+
+            // for checking size of image
+            if (!empty($_FILES)) {
+                $data['image_size'] = $_FILES['image']['size'];
+                self::$model->attributes['image_size'] = '';
+            }
+
             self::$model->load($data);
             if (!self::$model->validate($data)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
+
+            if (isset(self::$model->attributes['image_size'])) {
+                unset(self::$model->attributes['image_size']);
+                unset($data['image_size']);
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }

@@ -22,7 +22,7 @@ class CapoPeopleController extends AppController
 
     public function saveAction($params)
     {
-        if (!isset($_SESSION['user'])) redirect('/user/login');
+        if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
 
         self::$model->attributes = [
