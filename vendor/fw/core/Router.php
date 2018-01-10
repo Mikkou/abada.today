@@ -127,7 +127,7 @@ class Router
         return $params;
     }
 
-    protected static function checkLang($params):array
+    protected static function checkLang($params)
     {
         if (isset($params['lang'])) {
             if (isset($_COOKIE['lang'])) {
@@ -164,7 +164,7 @@ class Router
         return $params;
     }
 
-    protected static function getLangText($params):array
+    protected static function getLangText($params)
     {
         $langText = require ROOT . "/public/lang/{$params['lang']}.php";
         return $langText;
