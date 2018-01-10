@@ -12,7 +12,7 @@ class Events extends Model
         $this->table = 'events';
     }
 
-    public function deleteEvent($id):bool
+    public function deleteEvent($id)
     {
         $this->deleteObj($id, 'events');
         return true;

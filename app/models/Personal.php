@@ -35,7 +35,7 @@ class Personal extends Model
         return $result;
     }
 
-    public function changePassword($id, $newPass):bool
+    public function changePassword($id, $newPass)
     {
         $passHash = password_hash($newPass, PASSWORD_DEFAULT);
         $this->query("UPDATE users SET password = '{$passHash}' WHERE id = '{$id}'");

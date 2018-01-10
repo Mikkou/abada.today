@@ -38,7 +38,7 @@ class Branches extends Model
         ],
     ];
 
-    public function getAddress($data):string
+    public function getAddress($data)
     {
         $str = '';
         if (isset($data['country'])) {

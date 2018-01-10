@@ -178,7 +178,7 @@ class Events extends Model
         return $result;
     }
 
-    public function getCities($id, $lang):array
+    public function getCities($id, $lang)
     {
         return $this->query("SELECT id, {$lang} AS name FROM cities WHERE country_id = {$id} ORDER BY {$lang}");
     }

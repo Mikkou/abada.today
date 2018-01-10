@@ -43,7 +43,7 @@ class Main extends Model
     /**
      * @return array - all cities
      */
-    public function getAllCities():array
+    public function getAllCities()
     {
         $this->table = 'cities';
         return $this->findAll();

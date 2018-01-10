@@ -25,7 +25,7 @@ class User extends Model
         ]
     ];
 
-    public function checkUnique():bool
+    public function checkUnique()
     {
         $user = \R::findOne('users', 'email = ? LIMIT 1', [$this->attributes['email']]);
         if ($user) {
@@ -37,7 +37,7 @@ class User extends Model
         return true;
     }
 
-    public function login():bool
+    public function login()
     {
         $login = !empty(trim($_POST['login'])) ? trim($_POST['login']) : null;
         $password = !empty(trim($_POST['password'])) ? trim($_POST['password']) : null;
@@ -57,7 +57,7 @@ class User extends Model
         return false;
     }
 
-    public function restorePassword($login):bool
+    public function restorePassword($login)
     {
 
         $newPass = rand(600000, 1000000);
