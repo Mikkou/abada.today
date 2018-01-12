@@ -86,4 +86,25 @@ return [
     "must_not_contain_digits" => "не должен содержать цифр.",
     "begin_date_need_be_less_that_end_date" => "дата начала должна быть меньше даты окончания.",
 
+    // branches controller
+    "branch_was_successfully_add" => "Филиал успешно был добавлен.",
+    "error_branch_not_add" => "Ошибка! Филиал не был добавлен. Обратитесь пожалуйста в техподдержку.",
+
+    // events controller
+    "event_was_successfully_add" => "Событие успешно было добавлено.",
+    "error_event_not_add" => "Ошибка! Событие не было добавлено. Обратитесь пожалуйста в техподдержку.",
+
+    // personal controller
+    "data_saved" => "Данные сохранены.",
+    "error_data_was_not_save" => "Ошибка! Данные не были сохранены. Обратитесь пожалуйста в техподдержку.",
+    "branch_was_successfully_delete" => "Филиал был успешно удален.",
+    "password_was_save" => "Пароль сохранен.",
+    "event_was_successfully_delete" => "Событие было успешно удалено.",
+
+    // user controller
+    "you_was_successfully_register" => "Вы успешно зарегистрировались.",
+    "error_try_later" => "Ошибка! Попробуйте позже.",
+    "login_password_wrong" => "Логин/пароль введены неверно.",
+    "mail_new_password" => "Вам на указанную почту был выслан новый пароль.",
+
 ];

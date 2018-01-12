@@ -84,4 +84,25 @@ return [
     "must_not_contain_digits" => "must not contain digits.",
     "begin_date_need_be_less_that_end_date" => "begin date need to be less that end date.",
 
+    // branches controller
+    "branch_was_successfully_add" => "Branch was successfully add.",
+    "error_branch_not_add" => "Error! Branch wasn't add. Please, write to support.",
+
+    // events controller
+    "event_was_successfully_add" => "Events was successfully add.",
+    "error_event_not_add" => "Error! Event wasn't add. Please, write to support.",
+
+    // personal controller
+    "data_saved" => "Data was save.",
+    "error_data_was_not_save" => "Error! Data wasn't save. Please, write to support.",
+    "branch_was_successfully_delete" => "Branch was successfully delete.",
+    "password_was_save" => "Password was save.",
+    "event_was_successfully_delete" => "Event was successfully delete.",
+
+    // user controller
+    "you_was_successfully_register" => "You was successfully register.",
+    "error_try_later" => "Error! Try later.",
+    "login_password_wrong" => "Login or password is wrong.",
+    "mail_new_password" => "On your mail was sell new password.",
+
 ];

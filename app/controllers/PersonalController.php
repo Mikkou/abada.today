@@ -65,10 +65,10 @@ class PersonalController extends AppController
         if (self::$model->update('users', $str, $data['id'])) {
             // refresh nickname in him branch
             self::$model->query("UPDATE branches SET curator = '{$data['nickname']}' WHERE user_id = {$data['id']}");
-            $_SESSION['success'] = 'Данные сохранены.';
+            $_SESSION['success'] = $this->langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = 'Ошибка! Данные не были сохранены. Обратитесь пожалуйста в техподдержку.';
+            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
         }
         redirect('/personal');
     }
@@ -88,7 +88,7 @@ class PersonalController extends AppController
     {
         if (empty($params) || (int)$params['id'] < 1) redirect();
         self::$model->deleteObj($params['id'], 'events');
-        $_SESSION['success'] = 'Событие было успешно удалено.';
+        $_SESSION['success'] = $this->langT['event_was_successfully_delete'];
         $this->view = false;
         $_SESSION['user']['c_own_events'] -= 1;
         redirect('/personal/my-events');
@@ -109,7 +109,7 @@ class PersonalController extends AppController
     {
         if (empty($data) || (int)$data['id'] < 1) redirect();
         self::$model->deleteObj($data['id'], 'branches');
-        $_SESSION['success'] = 'Филиал был успешно удален.';
+        $_SESSION['success'] = $this->langT[''];
         $this->view = false;
         $_SESSION['user']['c_own_branches'] -= 1;
         redirect('/personal/my-branches');
@@ -200,10 +200,10 @@ class PersonalController extends AppController
         }
 
         if (self::$model->update('branches', $str, $data['id'])) {
-            $_SESSION['success'] = 'Данные сохранены.';
+            $_SESSION['success'] = $this->langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = 'Ошибка! Данные не были сохранены. Обратитесь пожалуйста в техподдержку.';
+            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
         }
         redirect('/personal/my-branches');
     }
@@ -319,10 +319,10 @@ class PersonalController extends AppController
         }
 
         if (self::$model->update('events', $str, $data['id'])) {
-            $_SESSION['success'] = 'Данные сохранены.';
+            $_SESSION['success'] = $this->langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = 'Ошибка! Данные не были сохранены. Обратитесь пожалуйста в техподдержку.';
+            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
         }
         redirect('/personal/my-events');
     }
@@ -351,7 +351,7 @@ class PersonalController extends AppController
             }
 
             self::$model->changePassword($id, $newPass);
-            $_SESSION['success'] = 'Пароль сохранен.';
+            $_SESSION['success'] = $this->langT['password_was_save'];
             redirect('/personal');
         }
         $langT = $params['langText'];

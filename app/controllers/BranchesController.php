@@ -72,11 +72,11 @@ class BranchesController extends AppController
             $data['user_id'] = $_SESSION['user']['id'];
             self::$model->load($data);
             if (self::$model->save(self::$model->table)) {
-                $_SESSION['success'] = 'Филиал успешно был добавлен.';
+                $_SESSION['success'] = $langT['branch_was_successfully_add'];
                 self::$model->refreshUserSession();
                 redirect('/branches');
             } else {
-                $_SESSION['error'] = 'Ошибка! Филиал не был добавлен. Обратитесь пожалуйста в техподдержку.';
+                $_SESSION['error'] = $langT['error_branch_not_add'];
                 redirect('/branches/add');
             }
 

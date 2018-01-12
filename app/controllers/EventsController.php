@@ -161,11 +161,11 @@ class EventsController extends AppController
             $data['user_id'] = $_SESSION['user']['id'];
             self::$model->load($data);
             if (self::$model->save('events')) {
-                $_SESSION['success'] = 'Событие успешно было добавлено.';
+                $_SESSION['success'] = $langT['event_was_successfully_add'];
                 self::$model->refreshUserSession();
                 redirect('/personal');
             } else {
-                $_SESSION['error'] = 'Ошибка! Событие не было добавлено. Обратитесь пожалуйста в техподдержку.';
+                $_SESSION['error'] = $langT['error_event_not_add'];
                 redirect('/events/add');
             }
         }
