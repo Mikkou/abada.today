@@ -206,18 +206,21 @@ class PersonalController extends AppController
         $langT = $params['langText'];
         $lang = $params['lang'];
         $event = self::$model->getEventById($params['id'], $lang);
+        $countries = self::$model->getAllCountries($lang);
         $categories = self::$model->getEventsCategories();
+        $countrysCities = self::$model->getCitiesByCountry($event['country_id'], $event['city_id'], $lang);
         $toggleCategory = $categories[(int)$event['category']][$lang];
         unset($categories[(int)$event['category']]);
         $checked = ($event['event_type'] === '1') ? 'checked' : '';
         $title = ($lang === 'en') ? 'Edit event' : 'Редактировать событие';
         View::setMeta($title);
-        $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'langT', 'lang'));
+        $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'langT', 'lang',
+            'countries', 'countrysCities'));
     }
 
-    public function saveEventAction($params)
+    public function saveEventAction($data)
     {
-        $data = $params;
+        $lang = $data['lang'];
         self::$model->attributes = [
             'name' => '',
             'begin_date' => '',
@@ -244,7 +247,6 @@ class PersonalController extends AppController
                 ['end_date'],
                 ['country'],
                 ['city'],
-                ['guest'],
             ],
             'url' => [
                 ['vk']
@@ -278,10 +280,12 @@ class PersonalController extends AppController
             unset($data['image_size']);
         }
 
-        if (isset($data['event_type'])) {
-          $data['event_type'] = 1;
-        } else {
-          $data['event_type'] = 0;
+        // check event type
+        $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;
+
+        // if city is new -> saving him and get his id
+        if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+            $data['city'] = self::$model->putNewCity($data['country'], $data['city'], $lang);
         }
 
         if (!empty($data['house'])) {
@@ -290,6 +294,7 @@ class PersonalController extends AppController
                 unset($data['house']);
             }
         }
+
         $data['description'] = htmlspecialchars($data['description'], ENT_QUOTES);
 
         $str = "name = '{$data['name']}', begin_date = '{$data['begin_date']}', end_date = '{$data['end_date']}',

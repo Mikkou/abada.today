@@ -21,7 +21,7 @@ $().ready(function () {
             var category = '';
             var obj = $('.filter-menu div input');
 
-            var arrayCat=[].slice.call(obj);
+            var arrayCat = [].slice.call(obj);
 
             arrayCat.forEach(function (v, k) {
                 if (category) {
@@ -57,7 +57,7 @@ $().ready(function () {
 
                             Map.addObjectsOnMap(v);
 
-                            v.name = (v.name) ? v.name: 'Мероприятие';
+                            v.name = (v.name) ? v.name : 'Мероприятие';
 
                             var guest = '';
                             if (v.guest) {
@@ -75,7 +75,8 @@ $().ready(function () {
                                   <img class="mr-3" src="` + v.image + `">
                                </a>
                             `
-                            };
+                            }
+                            ;
 
                             var address = '';
                             if (v.city) {
@@ -359,11 +360,25 @@ function getParamFromHref(param) {
     var array = [];
 
     if (href.indexOf('?') > -1) {
+
         var query = href.split('?')[1];
+
+        // getting params if only 1 has
         if (query.indexOf('&') === -1) {
+
             let a = query.split('=');
             array[a[0]] = a[1];
+
+        } else {
+
+            var aQuery = query.split('&');
+            aQuery.forEach(function (v, k) {
+                let a = aQuery[k].split('=');
+                array[a[0]] = a[1];
+            });
+
         }
+
     } else {
         alert("In href don't have any params");
         return false;
@@ -378,11 +393,11 @@ function getParamFromHref(param) {
 }
 
 function addNewCity() {
-    var newCity = prompt('Напишите желаемый город');
+    var newCity = prompt(LANG.please_write_city);
     var selCity = 'select#city';
     if (newCity) {
         if (existDublicateCity(newCity)) {
-            alert('Введенный населенный пункт уже существует в списке выбора.');
+            alert(LANG.city_already_exists);
             $(selCity).val('');
             return false;
         }
@@ -422,7 +437,7 @@ function existDublicateCity(newCity) {
 
     for (var i = 0; i < obj.length; i++) {
         var cityInOption = $(obj[i]).text();
-        if (cityInOption === newCity) {
+        if (cityInOption.toLowerCase() === newCity.toLowerCase()) {
             return true;
         }
     }

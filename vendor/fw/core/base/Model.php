@@ -194,6 +194,7 @@ abstract class Model
         $data = $this->query("SELECT e.id, e.name, e.begin_date, e.end_date, e.organizer, e.street, e.house, e.block,
                                         e.guest, e.professor, e.image, e.vk, e.category, e.description, e.event_type,
                                         e.user_id, e.coord_x, e.coord_y, co.{$lang} AS country, ci.{$lang} AS city,
+                                        co.id AS country_id, ci.id AS city_id,
                                         concat(co.{$lang}, ', ', ci.{$lang}, ', ', e.street, ', ', e.house,
                                          '/', e.block) as address
             
@@ -246,7 +247,8 @@ abstract class Model
 
     public function putNewCity($countryId, $city, $lang)
     {
-        $existing = $this->query("SELECT * FROM cities WHERE {$lang} = '{$city}'");
+        $cleanCity = str_replace('new_', '', $city);
+        $existing = $this->query("SELECT * FROM cities WHERE {$lang} = '{$cleanCity}'");
         if ($existing) {
             return $existing[0]['id'];
         } else {

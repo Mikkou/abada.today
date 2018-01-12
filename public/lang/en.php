@@ -75,5 +75,7 @@ return [
     "guest" => "Guest",
     "organizer" => "Organizer",
     "another" => "another",
+    "city_already_exists" => "City already exists in list.",
+    "please_write_city" => "Please, write wanted city.",
 
 ];

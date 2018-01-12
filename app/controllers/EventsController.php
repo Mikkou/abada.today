@@ -145,19 +145,13 @@ class EventsController extends AppController
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }
-            // check event type
-            if (isset($data['event_type'])) {
-              $data['event_type'] = 1;
-            } else {
-              $data['event_type'] = 0;
-            }
 
-            // save new city
-            if (isset($data['city'])) {
-                if (strpos($data['city'], 'new_') === 0) {
-                    $cleanCity = str_replace('new_', '', $data['city']);
-                    $data['city'] = self::$model->putNewCity($data['country'], $cleanCity, $lang);
-                }
+            // check event type
+            $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;
+
+            // if city is new -> saving him and get his id
+            if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+                $data['city'] = self::$model->putNewCity($data['country'], $data['city'], $lang);
             }
 
             $data['category'] = (int)$data['category'];
