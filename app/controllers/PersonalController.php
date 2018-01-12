@@ -121,15 +121,19 @@ class PersonalController extends AppController
         if (!isset($_SESSION['user'])) redirect('/');
         $langT = $params['langText'];
         $lang = $params['lang'];
-        $branch = self::$model->getBranch($params['id']);
+        $branch = self::$model->getBranch($params['id'], $lang);
+
+        $countries = self::$model->getAllCountries($lang, $branch['country_id']);
+        $countrysCities = self::$model->getCitiesByCountry($branch['country_id'], $branch['city_id'], $lang);
+
         $title = ($lang === 'en') ? 'Edit branch' : 'Редактировать филиал';
         View::setMeta($title);
-        $this->set(compact('branch', 'langT', 'lang'));
+        $this->set(compact('branch', 'langT', 'lang', 'countries', 'countrysCities'));
     }
 
-    public function saveBranchAction($params)
+    public function saveBranchAction($data)
     {
-        $data = $params;
+        $lang = $data['lang'];
         self::$model->attributes = [
             'country' => '',
             'city' => '',
@@ -180,6 +184,13 @@ class PersonalController extends AppController
             unset(self::$model->attributes['image_size']);
             unset($data['image_size']);
         }
+
+
+        // if city is new -> saving him and get his id
+        if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+            $data['city'] = self::$model->putNewCity($data['country'], $data['city'], $lang);
+        }
+
 
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
          house = '{$data['house']}', block = '{$data['block']}', phone = '{$data['phone']}', link = '{$data['link']}',

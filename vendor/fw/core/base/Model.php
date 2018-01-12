@@ -232,17 +232,35 @@ abstract class Model
         return $data;
     }
 
-    public function getAllCountries($lang = 'en, ru')
+    public function getAllCountries($lang = 'en, ru', $without = false)
     {
-        $data = $this->query("SELECT id, {$lang} FROM countries ORDER BY {$lang}");
+        $sql = '';
+        if ($without) {
+            $sql = "SELECT id, {$lang} FROM countries WHERE id != {$without} ORDER BY {$lang}";
+        } else {
+            $sql = "SELECT id, {$lang} FROM countries ORDER BY {$lang}";
+        }
+        $data = $this->query($sql);
         return $data;
     }
 
-    public function getBranch($id)
+    public function getBranch($id, $lang)
     {
-        $this->table = 'branches';
-        $data = $this->findOne($id)[0];
-        return $data;
+        $data = $this->query("SELECT b.id, b.user_id, b.street, b.house, b.block, b.image, b.phone,
+                    b.link, b.age_groups, b.site, b.schedule, b.curator, co.{$lang} AS country, ci.{$lang} AS city,
+                    co.id AS country_id, ci.id AS city_id
+            
+            FROM branches as b 
+            LEFT JOIN countries AS co ON b.country = co.id
+            LEFT JOIN cities AS ci ON b.city = ci.id
+            WHERE b.id = {$id}");
+
+        if ($data) {
+            return $data[0];
+        } else {
+            return [];
+        }
+
     }
 
     public function putNewCity($countryId, $city, $lang)
@@ -252,8 +270,8 @@ abstract class Model
         if ($existing) {
             return $existing[0]['id'];
         } else {
-            $this->query("INSERT INTO cities (country_id, {$lang}) VALUES ({$countryId}, '{$city}')");
-            return $this->query("SELECT id FROM cities WHERE {$lang} = '{$city}'")[0]['id'];
+            $this->query("INSERT INTO cities (country_id, {$lang}) VALUES ({$countryId}, '{$cleanCity}')");
+            return $this->query("SELECT id FROM cities WHERE {$lang} = '{$cleanCity}'")[0]['id'];
         }
     }
 }

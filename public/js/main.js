@@ -148,7 +148,7 @@ $().ready(function () {
             Map.openContent();
 
         },
-        eventsAddAndEdidPageRun: function () {
+        eventsAddAndEditPageRun: function () {
             $("#street, #house, #block").keyup(function (event) {
                 Map.getAddress();
                 Map.getMapsPoint(event);
@@ -157,12 +157,6 @@ $().ready(function () {
             $("#country, #city").change(function (e) {
                 Map.getAddress();
                 Map.getMapsPoint(e);
-                if (e.target.id === 'country') {
-                    loadCities();
-                }
-                if ($(this).val() === 'another') {
-                    addNewCity();
-                }
             });
 
             var coords = [55.76, 37.64];
@@ -319,13 +313,23 @@ $().ready(function () {
     };
 
     ymaps.ready(function () {
+
         let href = window.location.href;
         if (href.indexOf('events/add') > -1 || href.indexOf('admin/events/add') > -1
             || href.indexOf('personal/edit-event') > -1 || href.indexOf('admin/events/edit') > -1) {
-            Map.eventsAddAndEdidPageRun();
+            Map.eventsAddAndEditPageRun();
         } else if (href.indexOf('events') > -1) {
             Map.defaultRun();
         }
+
+        $("#country, #city").change(function (e) {
+            if (e.target.id === 'country') {
+                loadCities();
+            }
+            if ($(this).val() === 'another') {
+                addNewCity();
+            }
+        });
     });
 
 });
@@ -410,6 +414,7 @@ function addNewCity() {
 }
 
 function loadCities() {
+
     $('select#city').html('');
     var countryId = $('select#country').val();
     var lang = getParamFromHref('lang');

@@ -2,15 +2,32 @@
     <h3><?=$langT['edit_branch'] ?></h3>
     <form method="post" action="/personal/save-branch" enctype="multipart/form-data" class="add-event">
         <div class="row">
+
+
             <div class="3u 6u$(xsmall)">
-                <label for="country"><?=$langT['country'] ?></label>
-                <input type="text" name="country" id="country" required
-                       value="<?= $branch['country'] ?>">
+                <span><?=$langT['country']?></span>
+                <div class="select-wrapper">
+                    <select name="country" id="country">
+                        <option value="<?= $branch['country_id']?>"><?= $branch['country']?></option>
+                        <option value=""></option>
+                        <?php foreach ($countries as $value) { ?>
+                            <option value="<?= $value['id']?>"><?=$value[$lang]?></option>
+                        <?php } ?>
+                    </select>
+                </div>
             </div>
             <div class="3u 6u$(xsmall)">
-                <label for="city"><?=$langT['city'] ?></label>
-                <input type="text" name="city" id="city" placeholder="" required
-                       value="<?= $branch['city'] ?>">
+                <span><?=$langT['city']?></span>
+                <div class="select-wrapper">
+                    <select name="city" id="city">
+                        <option value="<?= $branch['city_id']?>"><?= $branch['city']?></option>
+                        <?php foreach ($countrysCities AS $cityV) { ?>
+                            <option value="<?=$cityV['id']?>"><?=$cityV[$lang]?></option>
+                        <?php } ?>
+                        <option value=""></option>
+                        <option value="another">....другой....</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="row">

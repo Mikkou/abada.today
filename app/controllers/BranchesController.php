@@ -39,6 +39,8 @@ class BranchesController extends AppController
     public function addAction($data)
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
+        $langT = $data['langText'];
+        $lang = $data['lang'];
         if (isset($data['country'])) {
 
             // for checking size of image
@@ -59,6 +61,11 @@ class BranchesController extends AppController
                 unset($data['image_size']);
             }
 
+            // if city is new -> saving him and get his id
+            if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+                $data['city'] = self::$model->putNewCity($data['country'], $data['city'], $lang);
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }
@@ -74,10 +81,10 @@ class BranchesController extends AppController
             }
 
         }
-        $langT = $data['langText'];
-        $lang = $data['lang'];
+
+        $countries = self::$model->getAllCountries($lang);
         $title = ($lang === 'en') ? 'Add branch' : 'Добавить филиал';
         View::setMeta($title);
-        $this->set(compact('langT', 'lang'));
+        $this->set(compact('langT', 'lang', 'countries'));
     }
 }

@@ -29,7 +29,7 @@ class BranchesController extends AppController
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
         if (!isset($_SESSION['admin'])) redirect('/');
-        $branch = self::$model->getBranch($params['id']);
+        $branch = self::$model->getBranch($params['id'], 'ru');
         View::setMeta('Админка :: Редактировать филиал');
         $this->set(compact('branch'));
     }
