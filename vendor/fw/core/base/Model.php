@@ -188,7 +188,7 @@ abstract class Model
     {
         $image = $this->query("SELECT image FROM `{$table}` WHERE id = {$id} ");
         // if have image
-        if (!empty($image)) {
+        if (!empty($image) && strpos($image[0]['image'], '/public/') !== false) {
             $image = $image[0]['image'];
 
             // change path on system path to work function file_exists
