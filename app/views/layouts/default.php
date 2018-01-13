@@ -54,7 +54,11 @@
 
                                         // проверяем на существование параметра lang
                                         if (strpos($_SERVER['REQUEST_URI'], 'lang=') === false) {
-                                            echo $host . $_SERVER['REQUEST_URI'] . "&lang=" . $newLang;
+                                            if (strpos($_SERVER['REQUEST_URI'], '?') === false) {
+                                                echo $host . $_SERVER['REQUEST_URI'] . "?lang=" . $newLang;
+                                            } else {
+                                                echo $host . $_SERVER['REQUEST_URI'] . "&lang=" . $newLang;
+                                            }
                                         } else {
                                             // меняем один язык на другой
                                             echo $host . str_replace(

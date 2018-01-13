@@ -388,7 +388,7 @@ function getParamFromHref(param) {
             alert("In href don't have any params");
             return false;
         }
-        console.log($('html').attr('lang'));
+        return $('html').attr('lang');
     }
 
     if (array[param] !== undefined) {
