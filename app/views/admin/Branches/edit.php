@@ -3,14 +3,29 @@
     <form method="post" action="/admin/branches/save-branch" enctype="multipart/form-data" class="add-event">
         <div class="row">
             <div class="3u 6u$(xsmall)">
-                <label for="country">Страна</label>
-                <input type="text" name="country" id="country" required
-                       value="<?= $branch['country'] ?>">
+                <span>Страна</span>
+                <div class="select-wrapper">
+                    <select name="country" id="country">
+                        <option value="<?= $branch['country_id']?>"><?= $branch['country']?></option>
+                        <option value=""></option>
+                        <?php foreach ($countries as $value) { ?>
+                            <option value="<?= $value['id']?>"><?=$value['ru']?></option>
+                        <?php } ?>
+                    </select>
+                </div>
             </div>
             <div class="3u 6u$(xsmall)">
-                <label for="city">Город</label>
-                <input type="text" name="city" id="city" placeholder="" required
-                       value="<?= $branch['city'] ?>">
+                <span>Город</span>
+                <div class="select-wrapper">
+                    <select name="city" id="city">
+                        <option value="<?= $branch['city_id']?>"><?= $branch['city']?></option>
+                        <?php foreach ($countrysCities AS $cityV) { ?>
+                            <option value="<?=$cityV['id']?>"><?=$cityV['ru']?></option>
+                        <?php } ?>
+                        <option value=""></option>
+                        <option value="another">....другой....</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="row">

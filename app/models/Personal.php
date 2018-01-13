@@ -41,11 +41,4 @@ class Personal extends Model
         $this->query("UPDATE users SET password = '{$passHash}' WHERE id = '{$id}'");
         return true;
     }
-
-    public function getCitiesByCountry($countryId, $withoutCityId, $lang)
-    {
-        return $this->query("SELECT id, {$lang} FROM cities 
-                  WHERE country_id = {$countryId} AND id != {$withoutCityId}
-                  ORDER BY {$lang} ASC");
-    }
 }

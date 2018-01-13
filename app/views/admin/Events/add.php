@@ -24,14 +24,23 @@
 
             <div class="row">
                 <div class="6u 12u$(medium)">
-                    <label for="country">Страна</label>
-                    <input type="text" name="country" id="country" required
-                           value="<?= isset($_SESSION['form_data']['country']) ? h($_SESSION['form_data']['country']) : ''; ?>">
+                    <span>Страна</span>
+                    <div class="select-wrapper">
+                        <select name="country" id="country">
+                            <option value=""></option>
+                            <?php foreach ($countries as $value) { ?>
+                                <option value="<?= $value['id']?>"><?=$value['ru']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="6u 12u$(medium)">
-                    <label for="city">Город</label>
-                    <input type="text" name="city" id="city" placeholder=""
-                           value="<?= isset($_SESSION['form_data']['city']) ? h($_SESSION['form_data']['city']) : ''; ?>">
+                    <span>Город</span>
+                    <div class="select-wrapper">
+                        <select name="city" id="city">
+                            <option value=""></option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">

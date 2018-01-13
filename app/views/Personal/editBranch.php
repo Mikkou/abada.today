@@ -2,8 +2,6 @@
     <h3><?=$langT['edit_branch'] ?></h3>
     <form method="post" action="/personal/save-branch" enctype="multipart/form-data" class="add-event">
         <div class="row">
-
-
             <div class="3u 6u$(xsmall)">
                 <span><?=$langT['country']?></span>
                 <div class="select-wrapper">

@@ -19,13 +19,30 @@
                 </div>
             </div>
             <div class="row">
-                <div class="6u 12u$(medium)">
-                    <label for="country">Страна</label>
-                    <input type="text" name="country" id="country" value="<?= $event['country']?>">
+                <div class="6u 12u$(xsmall)">
+                    <span>Страна</span>
+                    <div class="select-wrapper">
+                        <select name="country" id="country">
+                            <option value="<?= $event['country_id']?>"><?= $event['country']?></option>
+                            <option value=""></option>
+                            <?php foreach ($countries as $value) { ?>
+                                <option value="<?= $value['id']?>"><?=$value['ru']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
-                <div class="6u 12u$(medium)">
-                    <label for="city">Город</label>
-                    <input type="text" name="city" id="city" required value="<?= $event['city']?>">
+                <div class="6u 12u$(xsmall)">
+                    <span>Город</span>
+                    <div class="select-wrapper">
+                        <select name="city" id="city">
+                            <option value="<?= $event['city_id']?>"><?= $event['city']?></option>
+                            <?php foreach ($countrysCities AS $cityV) { ?>
+                                <option value="<?=$cityV['id']?>"><?=$cityV['ru']?></option>
+                            <?php } ?>
+                            <option value=""></option>
+                            <option value="another">....другой....</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -70,7 +87,7 @@
                         <select name="category">
                             <option value="<?= $event['category']?>"><?= $toggleCategory?></option>
                             <?php foreach ($categories as $value) { ?>
-                                <option value="<?= $value['id']?>"><?= $value['name']?></option>
+                                <option value="<?= $value['id']?>"><?= $value['ru']?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -97,7 +114,7 @@
             <div class="row">
                 <div class="12u 12u$">
                     <ul class="actions">
-                        <li><input type="submit" value="Опубликовать" class="special"></li>
+                        <li><input type="submit" value="Сохранить" class="special"></li>
                     </ul>
                 </div>
             </div>

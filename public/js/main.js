@@ -384,8 +384,11 @@ function getParamFromHref(param) {
         }
 
     } else {
-        alert("In href don't have any params");
-        return false;
+        if (param !== 'lang') {
+            alert("In href don't have any params");
+            return false;
+        }
+        console.log($('html').attr('lang'));
     }
 
     if (array[param] !== undefined) {
@@ -417,7 +420,8 @@ function loadCities() {
 
     $('select#city').html('');
     var countryId = $('select#country').val();
-    var lang = getParamFromHref('lang');
+
+    var lang = (location.href.indexOf('admin') > -1) ? 'ru' : getParamFromHref('lang');
 
     $.ajax({
         dataType: 'json',

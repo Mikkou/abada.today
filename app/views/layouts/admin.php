@@ -15,6 +15,14 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
+
+<script>
+    <?php
+    $l = json_encode(require ROOT . "/public/lang/ru.php");
+    echo 'const LANG = ' . $l . ';';
+    ?>
+</script>
+
 <!-- Wrapper -->
 <div id="wrapper">
 

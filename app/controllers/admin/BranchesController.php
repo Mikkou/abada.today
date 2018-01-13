@@ -30,8 +30,10 @@ class BranchesController extends AppController
         if (empty($params) || (int)$params['id'] < 1) redirect();
         if (!isset($_SESSION['admin'])) redirect('/');
         $branch = self::$model->getBranch($params['id'], 'ru');
+        $countries = self::$model->getAllCountries('ru', $branch['country_id']);
+        $countrysCities = self::$model->getCitiesByCountry($branch['country_id'], $branch['city_id'], 'ru');
         View::setMeta('Админка :: Редактировать филиал');
-        $this->set(compact('branch'));
+        $this->set(compact('branch', 'countries', 'countrysCities'));
     }
 
     public function saveBranchAction($params)
@@ -90,6 +92,11 @@ class BranchesController extends AppController
             unset($data['image_size']);
         }
 
+        // if city is new -> saving him and get his id
+        if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+            $data['city'] = self::$model->putNewCity($data['country'], $data['city'], 'ru');
+        }
+
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
          house = '{$data['house']}', block = '{$data['block']}', phone = '{$data['phone']}', link = '{$data['link']}',
           age_groups = '{$data['age_groups']}', site = '{$data['site']}', schedule = '{$data['schedule']}',
@@ -145,6 +152,11 @@ class BranchesController extends AppController
                 unset($data['image_size']);
             }
 
+            // if city is new -> saving him and get his id
+            if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+                $data['city'] = self::$model->putNewCity($data['country'], $data['city'], 'ru');
+            }
+
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
             }
@@ -160,6 +172,8 @@ class BranchesController extends AppController
             }
 
         }
+        $countries = self::$model->getAllCountries();
+        $this->set(compact('countries'));
         View::setMeta('Админка :: Добавление филиала');
     }
 }

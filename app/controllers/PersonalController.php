@@ -185,12 +185,10 @@ class PersonalController extends AppController
             unset($data['image_size']);
         }
 
-
         // if city is new -> saving him and get his id
         if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
             $data['city'] = self::$model->putNewCity($data['country'], $data['city'], $lang);
         }
-
 
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
          house = '{$data['house']}', block = '{$data['block']}', phone = '{$data['phone']}', link = '{$data['link']}',

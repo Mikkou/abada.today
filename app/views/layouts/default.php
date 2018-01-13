@@ -49,17 +49,24 @@
 
                                     $newLang = ($lang === 'ru') ? 'en' : 'ru';
 
-                                    if (strpos($_SERVER['REQUEST_URI'], '&') !== false) {
+                                    // проверяем 1 или несколько параметров
+                                    if (strpos($_SERVER['REQUEST_URI'], '&') === false) {
 
-                                        echo $host . str_replace(
-                                                $landParam, 'lang=' . $newLang, $requestUri
-                                            );
+                                        // проверяем на существование параметра lang
+                                        if (strpos($_SERVER['REQUEST_URI'], 'lang=') === false) {
+                                            echo $host . $_SERVER['REQUEST_URI'] . "&lang=" . $newLang;
+                                        } else {
+                                            // меняем один язык на другой
+                                            echo $host . str_replace(
+                                                    ['?lang=ru', '?lang=en'], '', $requestUri
+                                                ) . '?lang=' . $newLang;
+                                        }
 
                                     } else {
 
                                         echo $host . str_replace(
-                                                ['?lang=ru', '?lang=en'], '', $requestUri
-                                            ) . '?lang=' . $newLang;
+                                                $landParam, 'lang=' . $newLang, $requestUri
+                                            );
 
                                     }
 

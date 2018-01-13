@@ -20,15 +20,17 @@ class EventsController extends AppController
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $event = self::$model->getEventById($params['id'], 'ru');
         $categories = self::$model->getEventsCategories();
+        $countries = self::$model->getAllCountries();
+        $countrysCities = self::$model->getCitiesByCountry($event['country_id'], $event['city_id'], 'ru');
         if (is_null($event['category'])) {
             $toggleCategory = '';
         } else {
-            $toggleCategory = $categories[(int)$event['category']]['name'];
+            $toggleCategory = $categories[(int)$event['category']]['ru'];
             unset($categories[(int)$event['category']]);
         }
         $checked = ($event['event_type'] === '1') ? 'checked' : '';
         View::setMeta('Редактировать событие');
-        $this->set(compact('event', 'categories', 'toggleCategory', 'checked'));
+        $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'countries', 'countrysCities'));
     }
 
     public function saveEventAction($params)
@@ -60,7 +62,6 @@ class EventsController extends AppController
                 ['begin_date'],
                 ['end_date'],
                 ['country'],
-                ['guest'],
             ],
             'url' => [
                 ['vk']
@@ -94,10 +95,12 @@ class EventsController extends AppController
             unset($data['image_size']);
         }
 
-        if (isset($data['event_type'])) {
-            $data['event_type'] = 1;
-        } else {
-            $data['event_type'] = 0;
+        // check event type
+        $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;
+
+        // if city is new -> saving him and get his id
+        if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+            $data['city'] = self::$model->putNewCity($data['country'], $data['city'], 'ru');
         }
 
         if (!empty($data['house'])) {
@@ -129,10 +132,10 @@ class EventsController extends AppController
         } else {
             $_SESSION['success'] = 'Ошибка! Данные не были сохранены.';
         }
-        redirect('/admin');
+        redirect('/admin/main/events');
     }
 
-    public function addAction()
+    public function addAction($data)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
@@ -181,7 +184,6 @@ class EventsController extends AppController
             ]
         ];
 
-        $data = $_POST;
         if (isset($data['category'])) {
 
             // for checking size of image
@@ -207,10 +209,11 @@ class EventsController extends AppController
             }
 
             // check event type
-            if (isset($data['event_type'])) {
-                $data['event_type'] = 1;
-            } else {
-                $data['event_type'] = 0;
+            $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;
+
+            // if city is new -> saving him and get his id
+            if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
+                $data['city'] = self::$model->putNewCity($data['country'], $data['city'], 'ru');
             }
 
             $data['category'] = (int)$data['category'];
@@ -226,15 +229,16 @@ class EventsController extends AppController
             if (self::$model->save('events')) {
                 $_SESSION['success'] = 'Событие успешно было добавлено.';
                 self::$model->refreshUserSession();
-                redirect('/events');
+                redirect('/admin/events');
             } else {
                 $_SESSION['error'] = 'Ошибка! Событие не было добавлено.';
                 redirect('/admin/events/add');
             }
         }
+        $countries = self::$model->getAllCountries();
         $categories = self::$model->getEventsCategories();
         View::setMeta('Админ :: Добавление события');
-        $this->set(compact('categories'));
+        $this->set(compact('categories', 'countries'));
     }
 
     public function deleteAction($params)

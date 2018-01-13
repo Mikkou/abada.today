@@ -274,4 +274,11 @@ abstract class Model
             return $this->query("SELECT id FROM cities WHERE {$lang} = '{$cleanCity}'")[0]['id'];
         }
     }
+
+    public function getCitiesByCountry($countryId, $withoutCityId, $lang)
+    {
+        return $this->query("SELECT id, {$lang} FROM cities 
+                  WHERE country_id = {$countryId} AND id != {$withoutCityId}
+                  ORDER BY {$lang} ASC");
+    }
 }
