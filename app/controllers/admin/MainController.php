@@ -19,7 +19,7 @@ class MainController extends AppController
     public function indexAction()
     {
         // check auth
-        if (!isset($_SESSION['user'])) redirect('/main/login');
+        if (!isset($_SESSION['user'])) redirect('/user/login');
         if (isset($_SESSION['admin'])) {
             View::setMeta('Админка :: Главная страница');
         } else {

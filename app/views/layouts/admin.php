@@ -35,7 +35,7 @@
                 <a href="/" class="logo">ABADÁ-Capoeira</a>
                 <div style="text-align: right;">
                     <?php if (isset($_SESSION['admin'])) : ?>
-                        <a href="/admin/user/logout" class="button special">Выйти</a>
+                        <a href="/user/logout" class="button special">Выйти</a>
                     <?php endif; ?>
                 </div>
             </header>
