@@ -6,3 +6,5 @@ tmp/errors.log
 tmp/
 
 uploads/
+
+config/

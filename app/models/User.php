@@ -57,16 +57,14 @@ class User extends Model
         return false;
     }
 
-    public function restorePassword($login)
+    public function restorePassword($login, $langT)
     {
-
         $newPass = rand(600000, 1000000);
 
         $mail = new PHPMailer;
 
         $mail->isSMTP();
         $mail->Host = "smtp.gmail.com";
-//        $mail->Host = "smtp.abada.today";
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "ssl";
         $mail->Port = 465;
@@ -77,12 +75,12 @@ class User extends Model
         $mail->Password = 'mrmikkou1887342';
 //        $mail->Password = 'mK5cXI8AMM';
 //        $mail->setFrom('support@abada.today', 'Техподдержка');
-        $mail->setFrom('capoworld.net@gmail.com', 'Техподдержка');
+        $mail->setFrom('capoworld.net@gmail.com', $langT['support']);
         $mail->addAddress($login, '');
-        $mail->Subject  = 'Новый пароль';
-        $mail->Body     = 'Ваш новый пароль - ' . $newPass;
+        $mail->Subject = $langT['new_password'];
+        $mail->Body = $langT['your_new_password'] . $newPass;
 
-        if(!$mail->send()) {
+        if (!$mail->send()) {
             return false;
         } else {
             $passHash = password_hash($newPass, PASSWORD_DEFAULT);

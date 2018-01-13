@@ -78,6 +78,9 @@ class UserController extends AppController
 
     public function restorePasswordAction($params)
     {
+        $langT = $params['langText'];
+        $lang = $params['lang'];
+
         if (isset($params['login'])) {
 
             self::$model->attributes = [
@@ -97,15 +100,14 @@ class UserController extends AppController
                 redirect();
             }
             $login = $params['login'];
-            if (self::$model->restorePassword($login)) {
+            if (self::$model->restorePassword($login, $langT)) {
                 $_SESSION['success'] = 'Вам на указанную почту был выслан новый пароль.';
             } else {
                 throw new \Exception("Новый пароль не был отослан на почту {$login}");
             }
-            redirect('/main/login');
+            redirect('/user/login');
         }
-        $langT = $params['langText'];
-        $lang = $params['lang'];
+
         $this->set(compact('langT', 'lang'));
         $title = ($lang === 'en') ? 'Restore password' : 'Восстановление пароля';
         View::setMeta($title);
