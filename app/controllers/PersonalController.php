@@ -9,9 +9,9 @@ class PersonalController extends AppController
 {
     private static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         if (!isset($_SESSION['user'])) redirect('/');
         self::$model = new Personal();
     }
@@ -54,7 +54,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data)) {
+        if (!self::$model->validate($data, $this->lang, $this->langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -174,7 +174,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data)) {
+        if (!self::$model->validate($data, $this->lang, $this->langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -278,7 +278,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data)) {
+        if (!self::$model->validate($data, $this->lang, $this->langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -344,7 +344,7 @@ class PersonalController extends AppController
                 ]
             ];
 
-            if (!self::$model->validate($data)) {
+            if (!self::$model->validate($data, $this->lang, $this->langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();

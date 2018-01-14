@@ -74,10 +74,16 @@ return [
     "dates" => "Даты",
     "guest" => "Гость",
     "organizer" => "Организатор",
-    "another" => "другой", // for changing city in form
-    "city_already_exists" => "Введенный населенный пункт уже существует в списке выбора.", // for changing city in form
+    // for changing city in form
+    "another" => "другой",
+
+    "city_already_exists" => "Введенный населенный пункт уже существует в списке выбора.",
     "please_write_city" => "Напишите желаемый город",
     "your_new_password" => "Ваш новый пароль - ",
     "support" => "Техподдержка",
+
+    // for valitron
+    "must_not_contain_digits" => "не должен содержать цифр.",
+    "begin_date_need_be_less_that_end_date" => "дата начала должна быть меньше даты окончания.",
 
 ];

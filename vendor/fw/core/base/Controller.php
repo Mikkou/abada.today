@@ -23,11 +23,17 @@ abstract class Controller
 
     public $registry;
 
-    public function __construct($route)
+    public $lang;
+
+    public $langT;
+
+    public function __construct($route, $params)
     {
         $this->route = $route;
         $this->view = $route['action'];
         $this->registry = Registry::instance();
+        $this->lang = $params['lang'];
+        $this->langT = $params['langText'];
     }
 
     public function getView()

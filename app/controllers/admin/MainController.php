@@ -10,9 +10,9 @@ class MainController extends AppController
     public $layout = 'admin';
     public static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new Main();
     }
 
@@ -45,14 +45,6 @@ class MainController extends AppController
     {
         if (isset($_SESSION['admin'])) unset($_SESSION['admin']);
         redirect('/');
-    }
-
-    public function eventsAction()
-    {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        $data = self::$model->getEventsData();
-        View::setMeta('События');
-        $this->set(compact('data'));
     }
 
     public function changeDataAction($post)

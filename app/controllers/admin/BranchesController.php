@@ -10,9 +10,9 @@ class BranchesController extends AppController
     public $layout = 'admin';
     public static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new Branches();
     }
 
@@ -81,7 +81,7 @@ class BranchesController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data)) {
+        if (!self::$model->validate($data, $this->lang, $this->langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -141,7 +141,7 @@ class BranchesController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data)) {
+            if (!self::$model->validate($data, $this->lang, $this->langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();

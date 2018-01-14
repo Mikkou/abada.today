@@ -10,9 +10,9 @@ class UserController extends AppController
 {
     private static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new User();
     }
 
@@ -21,7 +21,7 @@ class UserController extends AppController
         if (!empty($_POST)) {
             $data = $_POST;
             self::$model->load($data);
-            if (!self::$model->validate($data) || !self::$model->checkUnique()) {
+            if (!self::$model->validate($data, $this->lang, $this->langT) || !self::$model->checkUnique()) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
@@ -76,12 +76,12 @@ class UserController extends AppController
         redirect('/personal');
     }
 
-    public function restorePasswordAction($params)
+    public function restorePasswordAction($data)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
+        $langT = $data['langText'];
+        $lang = $data['lang'];
 
-        if (isset($params['login'])) {
+        if (isset($data['login'])) {
 
             self::$model->attributes = [
                 'login'
@@ -92,14 +92,14 @@ class UserController extends AppController
                 ]
             ];
 
-            self::$model->load($params);
+            self::$model->load($data);
 
-            if (!self::$model->validate($params)) {
+            if (!self::$model->validate($data, $this->lang, $this->langT)) {
                 self::$model->getErrors();
-                $_SESSION['form_data'] = $params;
+                $_SESSION['form_data'] = $data;
                 redirect();
             }
-            $login = $params['login'];
+            $login = $data['login'];
             if (self::$model->restorePassword($login, $langT)) {
                 $_SESSION['success'] = 'Вам на указанную почту был выслан новый пароль.';
             } else {

@@ -10,9 +10,9 @@ class EventsController extends AppController
     public static $model;
     public static $categories;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new Events();
         self::$categories = self::$model->getEventsCategories();
     }
@@ -131,7 +131,7 @@ class EventsController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data)) {
+            if (!self::$model->validate($data, $this->lang, $this->langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();

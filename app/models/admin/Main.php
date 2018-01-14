@@ -19,11 +19,6 @@ class Main extends Model
         return false;
     }
 
-    public function getEventsData()
-    {
-        return $this->query("SELECT * FROM events WHERE begin_date > NOW() ORDER BY begin_date ASC");
-    }
-
     /**
      * @param $post - date from ajax
      * @return bool

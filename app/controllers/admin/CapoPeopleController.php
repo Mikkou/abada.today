@@ -9,9 +9,9 @@ class CapoPeopleController extends AppController
 {
     private static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new CapoPeople();
     }
 

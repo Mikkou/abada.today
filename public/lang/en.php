@@ -80,4 +80,8 @@ return [
     "your_new_password" => "Your new password - ",
     "support" => "Support",
 
+    // for valitron
+    "must_not_contain_digits" => "must not contain digits.",
+    "begin_date_need_be_less_that_end_date" => "begin date need to be less that end date.",
+
 ];

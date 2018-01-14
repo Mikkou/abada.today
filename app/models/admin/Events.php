@@ -12,6 +12,11 @@ class Events extends Model
         $this->table = 'events';
     }
 
+    public function getEventsData()
+    {
+        return $this->query("SELECT * FROM events WHERE begin_date > NOW() ORDER BY begin_date ASC");
+    }
+
     public function deleteEvent($id)
     {
         $this->deleteObj($id, 'events');

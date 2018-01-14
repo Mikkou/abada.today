@@ -29,30 +29,37 @@ abstract class Model
         }
     }
 
-    public function validate($data)
+    public function validate($data, $lang, $langT)
     {
         Validator::langDir(WWW . '/valitron/lang');
-        Validator::lang('ru');
+        Validator::lang($lang);
         $v = new Validator($data);
-        // new rule
+
+        // >>>>>>>>>>>>>>>>>> new rules
         $v->addRule('withoutNumbers', function ($field, $value, array $params, array $fields) {
             $output = preg_replace('/[^0-9]/', '', $value);
             if (empty($output)) {
                 return true;
             }
             return false;
-        }, 'не должен содержать цифр.');
+        }, $langT['must_not_contain_digits']);
+
         $v->addRule('greaterThen', function ($field, $value, array $params, array $fields) {
             if ($value < $fields['end_date'] || $value === $fields['end_date']) {
                 return true;
             }
             return false;
-        }, 'дата начала должна быть меньше даты окончания.');
+        }, $langT['begin_date_need_be_less_that_end_date']);
+        // <<<<<<<<<<<<<<<<<
+
         $v->rules($this->rules);
+
         if ($v->validate()) {
             return true;
         }
+
         $this->errors = $v->errors();
+
         return false;
     }
 

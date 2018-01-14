@@ -9,10 +9,18 @@ class EventsController extends AppController
 {
     private static $model;
 
-    public function __construct($route)
+    public function __construct($route, $params)
     {
-        parent::__construct($route);
+        parent::__construct($route, $params);
         self::$model = new Events();
+    }
+
+    public function indexAction()
+    {
+        if (!isset($_SESSION['user'])) redirect('/main/login');
+        $data = self::$model->getEventsData();
+        View::setMeta('События');
+        $this->set(compact('data'));
     }
 
     public function editAction($params)
@@ -84,7 +92,7 @@ class EventsController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data)) {
+        if (!self::$model->validate($data, $this->lang, $this->langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -132,7 +140,7 @@ class EventsController extends AppController
         } else {
             $_SESSION['success'] = 'Ошибка! Данные не были сохранены.';
         }
-        redirect('/admin/main/events');
+        redirect('/admin/events');
     }
 
     public function addAction($data)
@@ -193,7 +201,7 @@ class EventsController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data)) {
+            if (!self::$model->validate($data, $this->lang, $this->langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
@@ -249,6 +257,6 @@ class EventsController extends AppController
         if ($id === 0) redirect();
         self::$model->deleteEvent($id);
         $this->view = false;
-        redirect('/admin/main/events');
+        redirect('/admin/events');
     }
 }
