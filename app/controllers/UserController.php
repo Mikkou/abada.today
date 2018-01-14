@@ -52,7 +52,7 @@ class UserController extends AppController
             } else {
                 $_SESSION['error'] = 'Логин/пароль введены неверно.';
                 View::setMeta('Вход');
-                redirect('/main/login');
+                redirect('/user/login');
             }
         }
         $langT = $params['langText'];
