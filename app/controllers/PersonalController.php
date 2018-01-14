@@ -94,21 +94,21 @@ class PersonalController extends AppController
         redirect('/personal/my-events');
     }
 
-    public function myBranchesAction($params)
+    public function myBranchesAction($data)
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
-        $langT = $params['langText'];
-        $lang = $params['lang'];
+        $langT = $data['langText'];
+        $lang = $data['lang'];
         $branches = self::$model->getBranches($lang);
         $title = ($lang === 'en') ? 'My branches' : 'Мои филиалы';
         View::setMeta($title);
         $this->set(compact('branches', 'langT', 'lang'));
     }
 
-    public function deleteBranchAction($params)
+    public function deleteBranchAction($data)
     {
-        if (empty($params) || (int)$params['id'] < 1) redirect();
-        self::$model->deleteObj($params['id'], 'branches');
+        if (empty($data) || (int)$data['id'] < 1) redirect();
+        self::$model->deleteObj($data['id'], 'branches');
         $_SESSION['success'] = 'Филиал был успешно удален.';
         $this->view = false;
         $_SESSION['user']['c_own_branches'] -= 1;

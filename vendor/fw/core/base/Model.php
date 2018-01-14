@@ -190,6 +190,11 @@ abstract class Model
         // if have image
         if (!empty($image)) {
             $image = $image[0]['image'];
+
+            // change path on system path to work function file_exists
+            $a = explode('/public/', $image);
+            $image = $_SERVER['DOCUMENT_ROOT'] . '/public/' . $a[1];
+
             if (file_exists($image) && $image !== $_SERVER['DOCUMENT_ROOT']) unlink($image);
             return true;
         }
