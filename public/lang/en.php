@@ -74,7 +74,7 @@ return [
     "dates" => "Dates",
     "guest" => "Guest",
     "organizer" => "Organizer",
-    "another" => "another",
+    "add_another" => "add another",
     "city_already_exists" => "City already exists in list.",
     "please_write_city" => "Please, write wanted city.",
     "your_new_password" => "Your new password - ",

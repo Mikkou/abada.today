@@ -35,12 +35,18 @@
                     <span>Город</span>
                     <div class="select-wrapper">
                         <select name="city" id="city">
-                            <option value="<?= $event['city_id']?>"><?= $event['city']?></option>
+                            <?php if ($event['city']) { ?>
+                                <option value="<?= $event['city_id']?>"><?= $event['city']?></option>
+                            <?php } else { ?>
+                                <option value=""></option>
+                            <?php } ?>
                             <?php foreach ($countrysCities AS $cityV) { ?>
                                 <option value="<?=$cityV['id']?>"><?=$cityV['ru']?></option>
                             <?php } ?>
-                            <option value=""></option>
-                            <option value="another">....другой....</option>
+                            <?php if ($event['city']) :?>
+                                <option value=""></option>
+                            <?php endif; ?>
+                            <option value="another">....добавить другой....</option>
                         </select>
                     </div>
                 </div>

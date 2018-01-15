@@ -75,7 +75,7 @@ return [
     "guest" => "Гость",
     "organizer" => "Организатор",
     // for changing city in form
-    "another" => "другой",
+    "add_another" => "добавить другой",
 
     "city_already_exists" => "Введенный населенный пункт уже существует в списке выбора.",
     "please_write_city" => "Напишите желаемый город",
