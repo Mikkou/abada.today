@@ -34,12 +34,18 @@
                 <span><?=$langT['city']?></span>
                 <div class="select-wrapper">
                     <select name="city" id="city">
-                        <option value="<?= $event['city_id']?>"><?= $event['city']?></option>
+                        <?php if ($event['city']) { ?>
+                            <option value="<?= $event['city_id']?>"><?= $event['city']?></option>
+                        <?php } else { ?>
+                            <option value=""></option>
+                        <?php } ?>
                         <?php foreach ($countrysCities AS $cityV) { ?>
                             <option value="<?=$cityV['id']?>"><?=$cityV[$lang]?></option>
                         <?php } ?>
-                        <option value=""></option>
-                        <option value="another">....другой....</option>
+                        <?php if ($event['city']) : ?>
+                            <option value=""></option>
+                        <?php endif; ?>
+                        <option value="another">....<?=$langT['add_another']?>....</option>
                     </select>
                 </div>
             </div>
