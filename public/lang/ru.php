@@ -59,8 +59,10 @@ return [
     "category" => "Категория",
     "events_type" => "Тип мероприятия",
     "open" => "Открытое",
+    "close" => "закрытое",
     "description" => "Описание",
     "add_event" => "Добавить событие",
+    // add branch page
     "add_branch" => "Добавить филиал",
     "my_events" => "Мои события",
     "my_branches" => "Мои филиалы",
@@ -109,5 +111,14 @@ return [
 
     // ranches page
     "branch" => "Филиал",
+
+    // home page
+    "home" => "Главная",
+
+    // personal controller
+    "edit_personal_data" => "Рдактировать личные данные",
+
+    // user controller
+    "restore_password" => "Восстановление пароля",
 
 ];

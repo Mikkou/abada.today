@@ -10,23 +10,20 @@ class EventsController extends AppController
     public static $model;
     public static $categories;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new Events();
         self::$categories = self::$model->getEventsCategories();
     }
 
-    public function indexAction($data)
+    public function indexAction($data, $langT, $lang)
     {
-        $langT = $data['langText'];
-        $lang = $data['lang'];
         if (!isset($data['id'])) {
             $events = self::$model->getEvents([], $lang);
             $categories = $this->modifiedCat(self::$categories);
             $this->set(compact('events', '', 'categories', 'langT', 'lang'));
-            $title = ($lang === 'en') ? 'Events' : 'События';
-            View::setMeta($title,'Мировые события школы ABADA-Capoeira', 'capoeira, abada-capoeira');
+            View::setMeta($langT['events'],'Мировые события школы ABADA-Capoeira', 'capoeira, abada-capoeira');
         } else {
             // if click on branch
             $event = self::$model->getEventById($data['id'], $lang);
@@ -53,11 +50,7 @@ class EventsController extends AppController
             $event['description'] = self::$model->replaceParagraphOnBR($event['description']);
             $address = $this->getAddressStr($event);
             $category = $this->getCategoryName($event, $lang);
-            if ($lang === 'ru') {
-                $eventType = ($event['event_type'] == 1) ? 'открытое' : 'закрытое';
-            } else {
-                $eventType = ($event['event_type'] == 1) ? 'open' : 'close';
-            }
+            $eventType = ($event['event_type'] == 1) ? mb_strtolower($langT['open']) : $langT['close'];
 
             $this->view = 'card';
             View::setMeta($event['name']);
@@ -113,11 +106,8 @@ class EventsController extends AppController
         return $str;
     }
 
-    public function addAction($data)
+    public function addAction($data, $langT, $lang)
     {
-        $langT = $data['langText'];
-        $lang = $data['lang'];
-
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
         if (isset($data['category'])) {
 
@@ -171,15 +161,13 @@ class EventsController extends AppController
         }
         $countries = self::$model->getAllCountries($lang);
         $categories = self::$categories;
-        $title = ($lang === 'en') ? 'Add event' : 'Добавить событие';
-        View::setMeta($title);
+        View::setMeta($langT['add_event']);
         $this->set(compact('categories', 'countries', 'langT', 'lang'));
     }
 
-    public function getObjectsAction($params)
+    public function getObjectsAction($data, $langT, $lang)
     {
         $this->view = false;
-        $lang = $params['lang'];
         $events = json_encode(self::$model->getEvents([], $lang));
         echo $events;
     }
@@ -215,12 +203,11 @@ class EventsController extends AppController
         return $str;
     }
 
-    public function filterAction($params)
+    public function filterAction($data, $langT, $lang)
     {
-        if (strlen($params['categories']) > 10) redirect();
-        $lang = $params['lang'];
+        if (strlen($data['categories']) > 10) redirect();
         $this->view = false;
-        $events = self::$model->getEvents($params, $lang);
+        $events = self::$model->getEvents($data, $lang);
         echo json_encode($events);
     }
 
@@ -237,9 +224,9 @@ class EventsController extends AppController
         return $cat;
     }
 
-    public function getCitiesAction($params)
+    public function getCitiesAction($data, $langT, $lang)
     {
         $this->view = false;
-        echo json_encode(self::$model->getCities($params['id'], $params['lang']));
+        echo json_encode(self::$model->getCities($data['id'], $lang));
     }
 }

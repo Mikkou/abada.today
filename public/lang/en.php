@@ -59,6 +59,7 @@ return [
     "category" => "Category",
     "events_type" => "Events type",
     "open" => "Open",
+    "close" => "Close",
     "description" => "Description",
     "add_event" => "Add event",
     "add_branch" => "Add branch",
@@ -107,4 +108,13 @@ return [
 
     // ranches page
     "branch" => "Branch",
+
+    // home page
+    "home" => "Главная",
+
+    // personal controller
+    "edit_personal_data" => "Edit personal data",
+
+    // user controller
+    "restore_password" => "Restore password",
 ];

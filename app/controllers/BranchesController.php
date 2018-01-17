@@ -9,38 +9,31 @@ class BranchesController extends AppController
 {
     private static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new Branches();
     }
 
-    public function indexAction($data)
+    public function indexAction($data, $langT, $lang)
     {
-        $langT = $data['langText'];
-        $lang = $data['lang'];
-        // if need show list of branches
         if (!isset($data['id'])) {
             $branches = self::$model->getAllBranches($lang);
-            $title = $langT['branches'];
-            View::setMeta($title);
+            View::setMeta($langT['branches']);
             $this->set(compact('branches', 'langT', 'lang'));
         } else {
-            // if click on branch
+            // if click on branch -> open card
             $branch = self::$model->getBranch($data['id'], $lang);
             $branch['schedule'] = self::$model->replaceParagraphOnBR($branch['schedule']);
             $this->view = 'card';
-            $title = $langT['branch'];
-            View::setMeta($title);
+            View::setMeta($langT['branch']);
             $this->set(compact('branch', 'langT', 'lang'));
         }
     }
 
-    public function addAction($data)
+    public function addAction($data, $langT, $lang)
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
-        $langT = $data['langText'];
-        $lang = $data['lang'];
         if (isset($data['country'])) {
 
             // for checking size of image
@@ -83,8 +76,7 @@ class BranchesController extends AppController
         }
 
         $countries = self::$model->getAllCountries($lang);
-        $title = ($lang === 'en') ? 'Add branch' : 'Добавить филиал';
-        View::setMeta($title);
+        View::setMeta($langT['add_branch']);
         $this->set(compact('langT', 'lang', 'countries'));
     }
 }

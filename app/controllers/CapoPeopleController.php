@@ -9,29 +9,23 @@ class CapoPeopleController extends AppController
 {
     public static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new CapoPeople();
     }
 
-    public function indexAction($params)
+    public function indexAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $people = self::$model->getPeople(1, $lang);
         $this->set(compact('people', 'langT', 'lang'));
-        $title = ($lang === 'en') ? 'Сapoeristas' : 'Капоэйристы';
-        View::setMeta($title);
+        View::setMeta($langT['capoeristas']);
     }
 
-    public function rememberAction($params)
+    public function rememberAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $people = self::$model->getPeople(0, $lang);
         $this->set(compact('people', 'langT', 'lang'));
-        $title = ($lang === 'en') ? 'Thrown' : 'Бросившие';
-        View::setMeta($title);
+        View::setMeta($langT['thrown']);
     }
 }

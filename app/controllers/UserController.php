@@ -10,17 +10,17 @@ class UserController extends AppController
 {
     private static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new User();
     }
 
-    public function singupAction($data)
+    public function singupAction($data, $langT, $lang)
     {
         if (isset($data['password'])) {
             self::$model->load($data);
-            if (!self::$model->validate($data, $this->lang, $this->langT) || !self::$model->checkUnique()) {
+            if (!self::$model->validate($data, $lang, $langT) || !self::$model->checkUnique()) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
@@ -29,44 +29,38 @@ class UserController extends AppController
             if (self::$model->save('users')) {
                 $data = self::$model->query("SELECT * FROM users WHERE email = '{$data['email']}'")[0];
                 $data = array_merge(self::$model->getCount($data['id']), $data);
-                $_SESSION['success'] = $this->langT['you_was_successfully_register'];
+                $_SESSION['success'] = $langT['you_was_successfully_register'];
                 $_SESSION['user'] = $data;
             } else {
-                $_SESSION['error'] = $this->langT['error_try_later'];
+                $_SESSION['error'] = $langT['error_try_later'];
             }
             redirect('/');
         }
-        $langT = $data['langText'];
-        $lang = $data['lang'];
         $this->set(compact('langT', 'lang'));
-        $title = ($lang === 'en') ? 'Registration' : 'Регистрация';
-        View::setMeta($title);
+        View::setMeta($langT['registration']);
     }
 
-    public function loginAction($data)
+    public function loginAction($data, $langT, $lang)
     {
         if (!empty($_POST)) {
             if (self::$model->login()) {
                 redirect('/');
             } else {
-                $_SESSION['error'] = $this->langT['login_password_wrong'];
+                $_SESSION['error'] = $langT['login_password_wrong'];
                 redirect('/user/login');
             }
         }
-        $langT = $data['langText'];
-        $lang = $data['lang'];
         $this->set(compact('langT', 'lang'));
-        $title = ($lang === 'en') ? 'Login' : 'Вход';
-        View::setMeta($title);
+        View::setMeta($langT['login']);
     }
 
-    public function logoutAction()
+    public function logoutAction($data, $langT, $lang)
     {
         if (isset($_SESSION['user'])) unset($_SESSION['user']);
         redirect('/');
     }
 
-    public function editAction($data)
+    public function editAction($data, $langT, $lang)
     {
         $data['id'] = $_SESSION['user']['id'];
         self::$model->query("UPDATE users SET lastname = '{$data['lastname']}', firstname = '{$data['firstname']}',
@@ -74,11 +68,8 @@ class UserController extends AppController
         redirect('/personal');
     }
 
-    public function restorePasswordAction($data)
+    public function restorePasswordAction($data, $langT, $lang)
     {
-        $langT = $data['langText'];
-        $lang = $data['lang'];
-
         if (isset($data['login'])) {
 
             self::$model->attributes = [
@@ -92,14 +83,14 @@ class UserController extends AppController
 
             self::$model->load($data);
 
-            if (!self::$model->validate($data, $this->lang, $this->langT)) {
+            if (!self::$model->validate($data, $lang, $langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
             $login = $data['login'];
             if (self::$model->restorePassword($login, $langT)) {
-                $_SESSION['success'] = $this->langT['mail_new_password'];
+                $_SESSION['success'] = $langT['mail_new_password'];
             } else {
                 throw new \Exception("Новый пароль не был отослан на почту {$login}");
             }
@@ -107,7 +98,6 @@ class UserController extends AppController
         }
 
         $this->set(compact('langT', 'lang'));
-        $title = ($lang === 'en') ? 'Restore password' : 'Восстановление пароля';
-        View::setMeta($title);
+        View::setMeta($langT['restore_password']);
     }
 }

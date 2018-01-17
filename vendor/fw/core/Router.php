@@ -86,10 +86,10 @@ class Router
                 . 'Controller';
             if (class_exists($controller)) {
 
-                $cObj = new $controller(self::$route, $params);
+                $cObj = new $controller(self::$route);
                 $action = lowerCamelCase(self::$route['action']) . 'Action';
                 if (method_exists($cObj, $action)) {
-                    $cObj->$action($params);
+                    $cObj->$action($params, $params['langText'], $params['lang']);
                     $cObj->getView();
                 } else {
                     throw new \Exception("Метод <b>$controller::$action</b> не найден", 404);

@@ -9,34 +9,28 @@ class PersonalController extends AppController
 {
     private static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         if (!isset($_SESSION['user'])) redirect('/');
         self::$model = new Personal();
     }
 
-    public function indexAction($params)
+    public function indexAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $data = self::$model->query("SELECT * FROM users WHERE id = {$_SESSION['user']['id']}")[0];
-        $title = ($lang === 'en') ? 'Personal cabinet' : 'Личный кабинет';
-        View::setMeta($title);
+        View::setMeta($langT['own_cabinet']);
         $this->set(compact('data', 'langT', 'lang'));
     }
 
-    public function editAction($params)
+    public function editAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $data = self::$model->query("SELECT * FROM users WHERE id = {$_SESSION['user']['id']}")[0];
         $this->set(compact('data', 'langT', 'lang'));
-        $title = ($lang === 'en') ? 'Edit personal data' : 'Редактировать личные данные';
-        View::setMeta($title);
+        View::setMeta($langT['edit_personal_data']);
     }
 
-    public function saveAction($data)
+    public function saveAction($data, $langT, $lang)
     {
         self::$model->attributes = [
             'nickname' => '',
@@ -54,7 +48,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data, $this->lang, $this->langT)) {
+        if (!self::$model->validate($data, $lang, $langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -65,75 +59,65 @@ class PersonalController extends AppController
         if (self::$model->update('users', $str, $data['id'])) {
             // refresh nickname in him branch
             self::$model->query("UPDATE branches SET curator = '{$data['nickname']}' WHERE user_id = {$data['id']}");
-            $_SESSION['success'] = $this->langT['data_saved'];
+            $_SESSION['success'] = $langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
+            $_SESSION['success'] = $langT['error_data_was_not_save'];
         }
         redirect('/personal');
     }
 
-    public function myEventsAction($params)
+    public function myEventsAction($data, $langT, $lang)
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $events = self::$model->getEvents($lang);
-        $title = ($lang === 'en') ? 'My events' : 'Мои события';
-        View::setMeta($title);
+        View::setMeta($langT['my_events']);
         $this->set(compact('events', 'langT', 'lang'));
     }
 
-    public function deleteEventAction($params)
+    public function deleteEventAction($data, $langT, $lang)
     {
-        if (empty($params) || (int)$params['id'] < 1) redirect();
-        self::$model->deleteObj($params['id'], 'events');
-        $_SESSION['success'] = $this->langT['event_was_successfully_delete'];
+        if (empty($data) || (int)$data['id'] < 1) redirect();
+        self::$model->deleteObj($data['id'], 'events');
+        $_SESSION['success'] = $langT['event_was_successfully_delete'];
         $this->view = false;
         $_SESSION['user']['c_own_events'] -= 1;
         redirect('/personal/my-events');
     }
 
-    public function myBranchesAction($data)
+    public function myBranchesAction($data, $langT, $lang)
     {
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
-        $langT = $data['langText'];
-        $lang = $data['lang'];
         $branches = self::$model->getBranches($lang);
-        $title = ($lang === 'en') ? 'My branches' : 'Мои филиалы';
-        View::setMeta($title);
+        View::setMeta($langT['my_branches']);
         $this->set(compact('branches', 'langT', 'lang'));
     }
 
-    public function deleteBranchAction($data)
+    public function deleteBranchAction($data, $langT, $lang)
     {
         if (empty($data) || (int)$data['id'] < 1) redirect();
         self::$model->deleteObj($data['id'], 'branches');
-        $_SESSION['success'] = $this->langT[''];
+        $_SESSION['success'] = $langT['branch_was_successfully_delete'];
         $this->view = false;
         $_SESSION['user']['c_own_branches'] -= 1;
         redirect('/personal/my-branches');
     }
 
-    public function editBranchAction($params)
+    public function editBranchAction($data, $langT, $lang)
     {
         if (empty($params) || (int)$params['id'] < 1) redirect();
         if (!isset($_SESSION['user'])) redirect('/');
-        $langT = $params['langText'];
-        $lang = $params['lang'];
-        $branch = self::$model->getBranch($params['id'], $lang);
 
+        $branch = self::$model->getBranch($data['id'], $lang);
         $countries = self::$model->getAllCountries($lang, $branch['country_id']);
         $countrysCities = self::$model->getCitiesByCountry($branch['country_id'], $branch['city_id'], $lang);
 
-        $title = ($lang === 'en') ? 'Edit branch' : 'Редактировать филиал';
-        View::setMeta($title);
+        View::setMeta($langT['edit_branch']);
         $this->set(compact('branch', 'langT', 'lang', 'countries', 'countrysCities'));
     }
 
-    public function saveBranchAction($data)
+    public function saveBranchAction($data, $langT, $lang)
     {
-        $lang = $data['lang'];
         self::$model->attributes = [
             'country' => '',
             'city' => '',
@@ -174,7 +158,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data, $this->lang, $this->langT)) {
+        if (!self::$model->validate($data, $lang, $langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -200,36 +184,34 @@ class PersonalController extends AppController
         }
 
         if (self::$model->update('branches', $str, $data['id'])) {
-            $_SESSION['success'] = $this->langT['data_saved'];
+            $_SESSION['success'] = $langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
+            $_SESSION['success'] = $langT['error_data_was_not_save'];
         }
         redirect('/personal/my-branches');
     }
 
-    public function editEventAction($params)
+    public function editEventAction($data, $langT, $lang)
     {
-        if (empty($params) || (int)$params['id'] < 1) redirect();
+        if (empty($data) || (int)$data['id'] < 1) redirect();
         if (!isset($_SESSION['user'])) redirect('/');
-        $langT = $params['langText'];
-        $lang = $params['lang'];
-        $event = self::$model->getEventById($params['id'], $lang);
+
+        $event = self::$model->getEventById($data['id'], $lang);
         $countries = self::$model->getAllCountries($lang);
         $categories = self::$model->getEventsCategories();
         $countrysCities = self::$model->getCitiesByCountry($event['country_id'], $event['city_id'], $lang);
+
         $toggleCategory = $categories[(int)$event['category']][$lang];
         unset($categories[(int)$event['category']]);
         $checked = ($event['event_type'] === '1') ? 'checked' : '';
-        $title = ($lang === 'en') ? 'Edit event' : 'Редактировать событие';
-        View::setMeta($title);
+        View::setMeta($langT['edit_event']);
         $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'langT', 'lang',
             'countries', 'countrysCities'));
     }
 
-    public function saveEventAction($data)
+    public function saveEventAction($data, $langT, $lang)
     {
-        $lang = $data['lang'];
         self::$model->attributes = [
             'name' => '',
             'begin_date' => '',
@@ -278,7 +260,7 @@ class PersonalController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data, $this->lang, $this->langT)) {
+        if (!self::$model->validate($data, $lang, $langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -319,19 +301,18 @@ class PersonalController extends AppController
         }
 
         if (self::$model->update('events', $str, $data['id'])) {
-            $_SESSION['success'] = $this->langT['data_saved'];
+            $_SESSION['success'] = $langT['data_saved'];
             self::$model->refreshUserSession();
         } else {
-            $_SESSION['success'] = $this->langT['error_data_was_not_save'];
+            $_SESSION['success'] = $langT['error_data_was_not_save'];
         }
         redirect('/personal/my-events');
     }
 
-    public function changePasswordAction($params)
+    public function changePasswordAction($data, $langT, $lang)
     {
-        if (isset($params['password'])) {
-            $data = $params;
-            $newPass = $params['password'];
+        if (isset($data['password'])) {
+            $newPass = $data['password'];
             $id = $_SESSION['user']['id'];
 
             self::$model->attributes = [
@@ -344,21 +325,18 @@ class PersonalController extends AppController
                 ]
             ];
 
-            if (!self::$model->validate($data, $this->lang, $this->langT)) {
+            if (!self::$model->validate($data, $lang, $langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
 
             self::$model->changePassword($id, $newPass);
-            $_SESSION['success'] = $this->langT['password_was_save'];
+            $_SESSION['success'] = $langT['password_was_save'];
             redirect('/personal');
         }
-        $langT = $params['langText'];
-        $lang = $params['lang'];
         $this->set(compact('langT', 'lang'));
-        $title = ($lang === 'en') ? 'Change password' : 'Смена пароля';
-        View::setMeta($title);
+        View::setMeta($langT['change_password']);
     }
 
 }

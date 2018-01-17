@@ -13,27 +13,21 @@ class MainController extends AppController
 {
     private static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new Main;
     }
 
-    public function indexAction($params)
+    public function indexAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
-        $title = ($lang === 'ru') ? 'Главная' : 'Home';
         $this->set(compact('langT', 'lang'));
-        View::setMeta($title);
+        View::setMeta($langT['home']);
     }
 
-    public function aboutAction($params)
+    public function aboutAction($data, $langT, $lang)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
-        $title = ($lang === 'en') ? 'About' : 'О проекте';
         $this->set(compact('langT', 'lang'));
-        View::setMeta($title);
+        View::setMeta($langT['about']);
     }
 }
