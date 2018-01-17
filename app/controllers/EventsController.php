@@ -17,11 +17,11 @@ class EventsController extends AppController
         self::$categories = self::$model->getEventsCategories();
     }
 
-    public function indexAction($params)
+    public function indexAction($data)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
-        if (!isset($params['id'])) {
+        $langT = $data['langText'];
+        $lang = $data['lang'];
+        if (!isset($data['id'])) {
             $events = self::$model->getEvents([], $lang);
             $categories = $this->modifiedCat(self::$categories);
             $this->set(compact('events', '', 'categories', 'langT', 'lang'));
@@ -29,12 +29,12 @@ class EventsController extends AppController
             View::setMeta($title,'Мировые события школы ABADA-Capoeira', 'capoeira, abada-capoeira');
         } else {
             // if click on branch
-            $event = self::$model->getEventById($params['id'], $lang);
+            $event = self::$model->getEventById($data['id'], $lang);
 
             // check if don't find anything
             if (!$event) {
                 $json = json_encode($event);
-                throw new \Exception("Не найден объект {$params['id']} - {$json}");
+                throw new \Exception("Не найден объект {$data['id']} - {$json}");
             }
             $beginDate = explode('-', $event['begin_date']);
             $day = (int)$beginDate[2];

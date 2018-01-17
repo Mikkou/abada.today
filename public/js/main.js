@@ -434,7 +434,7 @@ function loadCities() {
                 html += `<option value="` + v.id + `">` + v.name + `</option>`;
             });
             html += `<option value=""></option>`;
-            html += `<option value="another">....` + LANG.another + `....</option>`;
+            html += `<option value="another">....` + LANG.add_another + `....</option>`;
 
             $('select#city').html(html);
         }

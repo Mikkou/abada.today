@@ -287,10 +287,18 @@ abstract class Model
         }
     }
 
-    public function getCitiesByCountry($countryId, $withoutCityId, $lang)
+    public function getCitiesByCountry($countryId, $withoutCityId = false, $lang)
     {
-        return $this->query("SELECT id, {$lang} FROM cities 
+        // all cities by country without one city
+        if ($withoutCityId) {
+
+            return $this->query("SELECT id, {$lang} FROM cities 
                   WHERE country_id = {$countryId} AND id != {$withoutCityId}
                   ORDER BY {$lang} ASC");
+
+            // all city by country
+        } else {
+            return $this->query("SELECT id, {$lang} FROM cities WHERE country_id = {$countryId} ORDER BY {$lang} ASC");
+        }
     }
 }
