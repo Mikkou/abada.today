@@ -24,7 +24,7 @@ class BranchesController extends AppController
         $this->set(compact('data', 'address'));
     }
 
-    public function editAction($params, $lang, $langT)
+    public function editAction($params, $langT, $lang)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
@@ -36,7 +36,7 @@ class BranchesController extends AppController
         $this->set(compact('branch', 'countries', 'countrysCities'));
     }
 
-    public function saveBranchAction($params, $lang, $langT)
+    public function saveBranchAction($params, $langT, $lang)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = $params;
@@ -117,7 +117,7 @@ class BranchesController extends AppController
 
     }
 
-    public function deleteAction($params, $lang, $langT)
+    public function deleteAction($params, $langT, $lang)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
@@ -128,7 +128,7 @@ class BranchesController extends AppController
         redirect('/admin/branches');
     }
 
-    public function addAction($data, $lang, $langT)
+    public function addAction($data, $langT, $lang)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 49) redirect();

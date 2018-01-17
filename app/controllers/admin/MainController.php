@@ -16,7 +16,7 @@ class MainController extends AppController
         self::$model = new Main();
     }
 
-    public function indexAction($data, $lang, $langT)
+    public function indexAction($data, $langT, $lang)
     {
         // check auth
         if (!isset($_SESSION['user'])) redirect('/user/login');
@@ -28,7 +28,7 @@ class MainController extends AppController
         }
     }
 
-    public function loginAction($data, $lang, $langT)
+    public function loginAction($data, $langT, $lang)
     {
         if (!empty($_POST)) {
             if (self::$model->login()) {
@@ -41,19 +41,19 @@ class MainController extends AppController
         View::setMeta('Вход');
     }
 
-    public function logoutAction($data, $lang, $langT)
+    public function logoutAction($data, $langT, $lang)
     {
         if (isset($_SESSION['admin'])) unset($_SESSION['admin']);
         redirect('/');
     }
 
-    public function changeDataAction($post, $lang, $langT)
+    public function changeDataAction($post, $langT, $lang)
     {
         $this->view = false;
         return self::$model->changeData($post);
     }
 
-    public function usersAction($data, $lang, $langT)
+    public function usersAction($data, $langT, $lang)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getUsers();
@@ -61,14 +61,14 @@ class MainController extends AppController
         $this->set(compact('data'));
     }
 
-    public function citiesAction($data, $lang, $langT)
+    public function citiesAction($data, $langT, $lang)
     {
         $data = self::$model->getAllCities();
         View::setMeta('Список городов');
         $this->set(compact('data'));
     }
 
-    public function countriesAction($data, $lang, $langT)
+    public function countriesAction($data, $langT, $lang)
     {
         $data = self::$model->getAllCountries();
         View::setMeta('Список стран');
