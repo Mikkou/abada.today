@@ -24,7 +24,7 @@ class BranchesController extends AppController
         $this->set(compact('data', 'address'));
     }
 
-    public function editAction($params)
+    public function editAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
@@ -36,7 +36,7 @@ class BranchesController extends AppController
         $this->set(compact('branch', 'countries', 'countrysCities'));
     }
 
-    public function saveBranchAction($params)
+    public function saveBranchAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = $params;
@@ -81,7 +81,7 @@ class BranchesController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data, $this->lang, $this->langT)) {
+        if (!self::$model->validate($data, $lang, $langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -117,7 +117,7 @@ class BranchesController extends AppController
 
     }
 
-    public function deleteAction($params)
+    public function deleteAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params) || (int)$params['id'] < 1) redirect();
@@ -128,7 +128,7 @@ class BranchesController extends AppController
         redirect('/admin/branches');
     }
 
-    public function addAction($data)
+    public function addAction($data, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 49) redirect();
@@ -141,7 +141,7 @@ class BranchesController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data, $this->lang, $this->langT)) {
+            if (!self::$model->validate($data, $lang, $langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();

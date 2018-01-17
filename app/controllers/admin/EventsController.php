@@ -15,7 +15,7 @@ class EventsController extends AppController
         self::$model = new Events();
     }
 
-    public function indexAction()
+    public function indexAction($data, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getEventsData();
@@ -23,7 +23,7 @@ class EventsController extends AppController
         $this->set(compact('data'));
     }
 
-    public function editAction($params)
+    public function editAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $event = self::$model->getEventById($params['id'], 'ru');
@@ -41,7 +41,7 @@ class EventsController extends AppController
         $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'countries', 'countrysCities'));
     }
 
-    public function saveEventAction($params)
+    public function saveEventAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = $params;
@@ -92,7 +92,7 @@ class EventsController extends AppController
 
         self::$model->load($data);
 
-        if (!self::$model->validate($data, $this->lang, $this->langT)) {
+        if (!self::$model->validate($data, $lang, $langT)) {
             self::$model->getErrors();
             $_SESSION['form_data'] = $data;
             redirect();
@@ -143,7 +143,7 @@ class EventsController extends AppController
         redirect('/admin/events');
     }
 
-    public function addAction($data)
+    public function addAction($data, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
@@ -201,7 +201,7 @@ class EventsController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data, $this->lang, $this->langT)) {
+            if (!self::$model->validate($data, $lang, $langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();
@@ -249,7 +249,7 @@ class EventsController extends AppController
         $this->set(compact('categories', 'countries'));
     }
 
-    public function deleteAction($params)
+    public function deleteAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if (empty($params)) redirect();

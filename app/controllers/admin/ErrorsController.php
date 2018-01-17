@@ -15,14 +15,14 @@ class ErrorsController extends AppController
         self::$model = new Errors();
     }
 
-    public function indexAction ()
+    public function indexAction ($data, $lang, $langT)
     {
         $errors = self::$model->getListErrors();
         $this->set(compact('errors'));
         View::setMeta('Админка :: Ошибки в системе');
     }
 
-    public function cleanAction()
+    public function cleanAction($data, $lang, $langT)
     {
         self::$model->clean();
         redirect();

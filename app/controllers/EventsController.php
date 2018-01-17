@@ -121,7 +121,7 @@ class EventsController extends AppController
             }
 
             self::$model->load($data);
-            if (!self::$model->validate($data, $this->lang, $this->langT)) {
+            if (!self::$model->validate($data, $lang, $langT)) {
                 self::$model->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect();

@@ -20,7 +20,7 @@ class CapoPeopleController extends AppController
         View::setMeta('Добавить капоэйриста');
     }
 
-    public function saveAction($params)
+    public function saveAction($params, $lang, $langT)
     {
         if (!isset($_SESSION['user'])) redirect('/main/login');
         if ((int)$_SESSION['user']['rights'] < 10) redirect();
