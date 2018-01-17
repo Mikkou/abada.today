@@ -9,9 +9,9 @@ class EventsController extends AppController
 {
     private static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new Events();
     }
 

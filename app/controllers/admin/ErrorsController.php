@@ -9,9 +9,9 @@ class ErrorsController extends AppController
 {
     public static $model;
 
-    public function __construct($route, $params)
+    public function __construct($route)
     {
-        parent::__construct($route, $params);
+        parent::__construct($route);
         self::$model = new Errors();
     }
 
