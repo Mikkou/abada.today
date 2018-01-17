@@ -59,7 +59,7 @@
                     <li><a href="/admin/branches">Филиалы</a></li>
                     <li><a href="/admin/main/users">Пользователи</a></li>
                     <li><a href="/admin/errors">Ошибки в системе</a></li>
-                    <li><a href="/admin/capo-people/add">Капоэйристы::добавить</a></li>
+<!--                    <li><a href="/admin/capo-people/add">Капоэйристы::добавить</a></li>-->
                     <li><a href="/admin/main/cities">Города</a></li>
                     <li><a href="/admin/main/countries">Страны</a></li>
                 </ul>

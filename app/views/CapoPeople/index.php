@@ -10,12 +10,12 @@
             </div>
             <div class="10u 12u$(small)" style="margin-left: 10px;">
 
-                <?php if (!empty($v['name'])) :?>
-                    <div class="row"><strong><?=$langT['name']?>:&nbsp;</strong><?=$v['name']?></div>
+                <?php if (!empty($v['apelido'])) :?>
+                    <div class="row" style="padding-left: 25px;"><h3 style="margin: 0; padding: 0;"><?=$v['status']?> <?=$v['apelido']?></h3></div>
                 <?php endif; ?>
 
-                <?php if (!empty($v['apelido'])) :?>
-                    <div class="row"><strong><?=$langT['apelido']?>:&nbsp;</strong><?=$v['apelido']?></div>
+                <?php if (!empty($v['name'])) :?>
+                    <div class="row"><strong><?=$langT['name']?>:&nbsp;</strong><?=$v['name']?></div>
                 <?php endif; ?>
 
                 <?php if (!empty($v['corda'])) :?>
