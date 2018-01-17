@@ -105,4 +105,6 @@ return [
     "login_password_wrong" => "Login or password is wrong.",
     "mail_new_password" => "On your mail was sell new password.",
 
+    // ranches page
+    "branch" => "Branch",
 ];

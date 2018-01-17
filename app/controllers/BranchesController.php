@@ -15,22 +15,22 @@ class BranchesController extends AppController
         self::$model = new Branches();
     }
 
-    public function indexAction($params)
+    public function indexAction($data)
     {
-        $langT = $params['langText'];
-        $lang = $params['lang'];
+        $langT = $data['langText'];
+        $lang = $data['lang'];
         // if need show list of branches
-        if (!isset($params['id'])) {
+        if (!isset($data['id'])) {
             $branches = self::$model->getAllBranches($lang);
-            $title = ($lang === 'en') ? 'Branches' : 'Филиалы';
+            $title = $langT['branches'];
             View::setMeta($title);
             $this->set(compact('branches', 'langT', 'lang'));
         } else {
             // if click on branch
-            $branch = self::$model->getBranch($params['id'], $lang);
+            $branch = self::$model->getBranch($data['id'], $lang);
             $branch['schedule'] = self::$model->replaceParagraphOnBR($branch['schedule']);
             $this->view = 'card';
-            $title = ($lang === 'en') ? 'Branch' : 'Филиал';
+            $title = $langT['branch'];
             View::setMeta($title);
             $this->set(compact('branch', 'langT', 'lang'));
         }

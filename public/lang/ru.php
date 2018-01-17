@@ -107,4 +107,7 @@ return [
     "login_password_wrong" => "Логин/пароль введены неверно.",
     "mail_new_password" => "Вам на указанную почту был выслан новый пароль.",
 
+    // ranches page
+    "branch" => "Филиал",
+
 ];
