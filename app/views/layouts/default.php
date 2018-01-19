@@ -151,6 +151,8 @@ foreach ($scripts as $script) {
     })();</script>
 <!-- {/literal} END JIVOSITE CODE -->
 
+<?php if (DEBUG === 0) :?>
+
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
     (function (d, w, c) {
@@ -178,8 +180,11 @@ foreach ($scripts as $script) {
         } else { f(); }
     })(document, window, "yandex_metrika_callbacks");
 </script>
+
 <noscript><div><img src="https://mc.yandex.ru/watch/46692288" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+
+<?php endif; ?>
 
 </body>
 </html>
