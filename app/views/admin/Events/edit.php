@@ -124,7 +124,6 @@
                     </ul>
                 </div>
             </div>
-            <input type="text" name="organizer" value="<?= $event['organizer']?>" style="display: none;">
             <input name="id" value="<?= $event['id']?>" style="display: none;">
             <input type="hidden" id="coord_x" name="coord_x" value="<?= $event['coord_x']?>">
             <input type="hidden" id="coord_y" name="coord_y" value="<?= $event['coord_y']?>">
