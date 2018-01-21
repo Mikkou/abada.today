@@ -17,16 +17,14 @@ class EventsController extends AppController
 
     public function indexAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getEventsData();
         View::setMeta('События');
         $this->set(compact('data'));
     }
 
-    public function editAction($params, $langT, $lang)
+    public function editAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        $event = self::$model->getEventById($params['id'], 'ru');
+        $event = self::$model->getEventById($data['id'], 'ru');
         $categories = self::$model->getEventsCategories();
         $countries = self::$model->getAllCountries();
         $countrysCities = self::$model->getCitiesByCountry($event['country_id'], $event['city_id'], 'ru');
@@ -41,10 +39,8 @@ class EventsController extends AppController
         $this->set(compact('event', 'categories', 'toggleCategory', 'checked', 'countries', 'countrysCities'));
     }
 
-    public function saveEventAction($params, $langT, $lang)
+    public function saveEventAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        $data = $params;
         self::$model->attributes = [
             'name' => '',
             'begin_date' => '',
@@ -64,44 +60,7 @@ class EventsController extends AppController
             'coord_y' => '',
         ];
 
-        self::$model->rules = [
-            'required' => [
-                ['name'],
-                ['begin_date'],
-                ['end_date'],
-                ['country'],
-            ],
-            'url' => [
-                ['vk']
-            ],
-            'lengthMax' => [
-                ['description', 4096],
-                ['house', 4],
-                ['block', 3]
-            ],
-            'max' => [
-                ['image_size', 500000]
-            ]
-        ];
-
-        // for checking size of image
-        if (!empty($_FILES)) {
-            $data['image_size'] = $_FILES['image']['size'];
-            self::$model->attributes['image_size'] = '';
-        }
-
-        self::$model->load($data);
-
-        if (!self::$model->validate($data, $lang, $langT)) {
-            self::$model->getErrors();
-            $_SESSION['form_data'] = $data;
-            redirect();
-        }
-
-        if (isset(self::$model->attributes['image_size'])) {
-            unset(self::$model->attributes['image_size']);
-            unset($data['image_size']);
-        }
+        $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
         // check event type
         $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;
@@ -127,8 +86,6 @@ class EventsController extends AppController
            event_type = {$data['event_type']}, vk = '{$data['vk']}', coord_x = '{$data['coord_x']}',
             coord_y = '{$data['coord_y']}'";
 
-
-
         if (!empty($_FILES['image']['tmp_name'])) {
             $data['image'] = self::$model->saveImage(true, $data['id'], 'events');
             $str .= ", image = '{$data['image']}'";
@@ -145,9 +102,6 @@ class EventsController extends AppController
 
     public function addAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
-
         self::$model->attributes = [
             'name' => '',
             'begin_date' => '',
@@ -169,48 +123,9 @@ class EventsController extends AppController
             'user_id' => '',
         ];
 
-        self::$model->rules = [
-            'required' => [
-                ['name'],
-                ['begin_date'],
-                ['end_date'],
-                ['country'],
-            ],
-            'greaterThen' => [
-                ['begin_date'],
-            ],
-            'url' => [
-                ['vk'],
-            ],
-            'lengthMax' => [
-                ['description', 4096],
-                ['house', 4],
-                ['block', 3],
-            ],
-            'max' => [
-                ['image_size', 500000]
-            ]
-        ];
-
         if (isset($data['category'])) {
 
-            // for checking size of image
-            if (!empty($_FILES)) {
-                $data['image_size'] = $_FILES['image']['size'];
-                self::$model->attributes['image_size'] = '';
-            }
-
-            self::$model->load($data);
-            if (!self::$model->validate($data, $lang, $langT)) {
-                self::$model->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
-
-            if (isset(self::$model->attributes['image_size'])) {
-                unset(self::$model->attributes['image_size']);
-                unset($data['image_size']);
-            }
+            $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
@@ -249,11 +164,9 @@ class EventsController extends AppController
         $this->set(compact('categories', 'countries'));
     }
 
-    public function deleteAction($params, $langT, $lang)
+    public function deleteAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if (empty($params)) redirect();
-        $id = (int)$params['id'];
+        $id = (int)$data['id'];
         if ($id === 0) redirect();
         self::$model->deleteEvent($id);
         $this->view = false;

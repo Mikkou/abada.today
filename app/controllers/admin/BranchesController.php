@@ -16,30 +16,25 @@ class BranchesController extends AppController
         self::$model = new Branches();
     }
 
-    public function indexAction()
+    public function indexAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getAllBranches('ru');
         View::setMeta('Админка :: Филиалы');
         $this->set(compact('data', 'address'));
     }
 
-    public function editAction($params, $langT, $lang)
+    public function editAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if (empty($params) || (int)$params['id'] < 1) redirect();
-        if (!isset($_SESSION['admin'])) redirect('/');
-        $branch = self::$model->getBranch($params['id'], 'ru');
+        $branch = self::$model->getBranch($data['id'], 'ru');
         $countries = self::$model->getAllCountries('ru', $branch['country_id']);
         $countrysCities = self::$model->getCitiesByCountry($branch['country_id'], $branch['city_id'], 'ru');
+
         View::setMeta('Админка :: Редактировать филиал');
         $this->set(compact('branch', 'countries', 'countrysCities'));
     }
 
-    public function saveBranchAction($params, $langT, $lang)
+    public function saveBranchAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        $data = $params;
         self::$model->attributes = [
             'country' => '',
             'city' => '',
@@ -56,47 +51,14 @@ class BranchesController extends AppController
             'id' => '',
         ];
 
-        self::$model->rules = [
-            'required' => [
-                ['country'],
-                ['city'],
-                ['street'],
-                ['house'],
-                ['phone'],
-            ],
-            'url' => [
-                ['link'],
-//                ['site']
-            ],
-            'max' => [
-                ['image_size', 500000]
-            ]
-        ];
-
-        // for checking size of image
-        if (!empty($_FILES)) {
-            $data['image_size'] = $_FILES['image']['size'];
-            self::$model->attributes['image_size'] = '';
-        }
-
-        self::$model->load($data);
-
-        if (!self::$model->validate($data, $lang, $langT)) {
-            self::$model->getErrors();
-            $_SESSION['form_data'] = $data;
-            redirect();
-        }
-
-        if (isset(self::$model->attributes['image_size'])) {
-            unset(self::$model->attributes['image_size']);
-            unset($data['image_size']);
-        }
+        $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
         // if city is new -> saving him and get his id
         if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
             $data['city'] = self::$model->putNewCity($data['country'], $data['city'], 'ru');
         }
 
+        // unite string sql request
         $str = "country = '{$data['country']}', city = '{$data['city']}', street = '{$data['street']}',
          house = '{$data['house']}', block = '{$data['block']}', phone = '{$data['phone']}', link = '{$data['link']}',
           age_groups = '{$data['age_groups']}', site = '{$data['site']}', schedule = '{$data['schedule']}',
@@ -117,11 +79,9 @@ class BranchesController extends AppController
 
     }
 
-    public function deleteAction($params, $langT, $lang)
+    public function deleteAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if (empty($params) || (int)$params['id'] < 1) redirect();
-        self::$model->deleteObj($params['id'], 'branches');
+        self::$model->deleteObj($data['id'], 'branches');
         $_SESSION['success'] = 'Филиал был успешно удален.';
         $this->view = false;
         $_SESSION['user']['c_own_branches'] -= 1;
@@ -130,27 +90,25 @@ class BranchesController extends AppController
 
     public function addAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if ((int)$_SESSION['user']['rights'] < 49) redirect();
         if (isset($data['country'])) {
 
-            // for checking size of image
-            if (!empty($_FILES)) {
-                $data['image_size'] = $_FILES['image']['size'];
-                self::$model->attributes['image_size'] = '';
-            }
+            self::$model->attributes = [
+                'country' => '',
+                'city' => '',
+                'street' => '',
+                'house' => '',
+                'block' => '',
+                'curator' => '',
+                'image' => '',
+                'phone' => '',
+                'link' => '',
+                'age_groups' => '',
+                'site' => '',
+                'schedule' => '',
+                'user_id' => '',
+            ];
 
-            self::$model->load($data);
-            if (!self::$model->validate($data, $lang, $langT)) {
-                self::$model->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
-
-            if (isset(self::$model->attributes['image_size'])) {
-                unset(self::$model->attributes['image_size']);
-                unset($data['image_size']);
-            }
+            $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
             // if city is new -> saving him and get his id
             if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {

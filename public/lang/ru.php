@@ -121,4 +121,10 @@ return [
     // user controller
     "restore_password" => "Восстановление пароля",
 
+    "you_really_want_delete_event" => "Вы действительно хотите удалить событие?",
+    "you_really_want_delete_branch" => "Вы действительно хотите удалить филиал?",
+
+    // valitron rule for image size
+    "image_need_be_max" => "должна быть менее 500kb",
+
 ];

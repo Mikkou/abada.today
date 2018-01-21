@@ -6,6 +6,30 @@ use fw\core\base\Model;
 
 class Events extends Model
 {
+
+    public $rules = [
+        'required' => [
+            ['name'],
+            ['begin_date'],
+            ['end_date'],
+            ['country'],
+        ],
+        'greaterThen' => [
+            ['begin_date'],
+        ],
+        'url' => [
+            ['vk'],
+        ],
+        'lengthMax' => [
+            ['description', 4096],
+            ['house', 4],
+            ['block', 3],
+        ],
+        'max' => [
+            ['image_size', 500000]
+        ]
+    ];
+
     public function __construct()
     {
         parent::__construct();

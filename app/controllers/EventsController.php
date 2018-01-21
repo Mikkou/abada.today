@@ -21,7 +21,7 @@ class EventsController extends AppController
     {
         if (!isset($data['id'])) {
             $events = self::$model->getEvents([], $lang);
-            $categories = $this->modifiedCat(self::$categories);
+            $categories = self::$model->modifiedCat(self::$categories);
             $this->set(compact('events', '', 'categories', 'langT', 'lang'));
             View::setMeta($langT['events'],'Мировые события школы ABADA-Capoeira', 'capoeira, abada-capoeira');
         } else {
@@ -49,7 +49,6 @@ class EventsController extends AppController
 
             $event['description'] = self::$model->replaceParagraphOnBR($event['description']);
             $address = $this->getAddressStr($event);
-            $category = $this->getCategoryName($event, $lang);
             $eventType = ($event['event_type'] == 1) ? mb_strtolower($langT['open']) : $langT['close'];
 
             $this->view = 'card';
@@ -58,79 +57,13 @@ class EventsController extends AppController
         }
     }
 
-    public function getCategoryName($event, $lang)
-    {
-        $str = '';
-        if (is_null($event['category'])) {
-            return '';
-        }
-
-        if ($lang === 'ru') {
-            switch ((int)$event['category']) {
-                case 0:
-                    $str = 'Жогосы';
-                    break;
-                case 1:
-                    $str = 'Батизады';
-                    break;
-                case 2:
-                    $str = 'Семинары';
-                    break;
-                case 3:
-                    $str = 'Лагеря';
-                    break;
-                case 4:
-                    $str = 'Другое';
-                    break;
-            }
-        } else {
-            switch ((int)$event['category']) {
-                case 0:
-                    $str = 'jogos';
-                    break;
-                case 1:
-                    $str = 'batizados';
-                    break;
-                case 2:
-                    $str = 'seminars';
-                    break;
-                case 3:
-                    $str = 'camps';
-                    break;
-                case 4:
-                    $str = 'another';
-                    break;
-            }
-        }
-
-        return $str;
-    }
-
     public function addAction($data, $langT, $lang)
     {
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
+        $this->checkPermission('trainer');
+
         if (isset($data['category'])) {
 
-            unset($data['langText']);
-            unset($data['lang']);
-
-            // for checking size of image
-            if (!empty($_FILES)) {
-                $data['image_size'] = $_FILES['image']['size'];
-                self::$model->attributes['image_size'] = '';
-            }
-
-            self::$model->load($data);
-            if (!self::$model->validate($data, $lang, $langT)) {
-                self::$model->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
-
-            if (isset(self::$model->attributes['image_size'])) {
-                unset(self::$model->attributes['image_size']);
-                unset($data['image_size']);
-            }
+            self::$model->preparationValidationImage($data, $lang, $langT);
 
             if (!empty($_FILES)) {
                 $data['image'] = self::$model->saveImage();
@@ -209,19 +142,6 @@ class EventsController extends AppController
         $this->view = false;
         $events = self::$model->getEvents($data, $lang);
         echo json_encode($events);
-    }
-
-    public function modifiedCat($cat)
-    {
-        $count = count($cat);
-        for ($i = 0; $i < $count; $i++) {
-            if ($i < 2) {
-                $cat[$i]['checked'] = 'checked';
-            } else {
-                $cat[$i]['checked'] = '';
-            }
-        }
-        return $cat;
     }
 
     public function getCitiesAction($data, $langT, $lang)

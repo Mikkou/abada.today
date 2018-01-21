@@ -88,4 +88,9 @@ class User extends Model
             return true;
         }
     }
+
+    public function getUserData($data)
+    {
+        return $this->query("SELECT * FROM users WHERE email = '{$data['email']}'")[0];
+    }
 }

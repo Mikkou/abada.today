@@ -15,16 +15,13 @@ class CapoPeopleController extends AppController
         self::$model = new CapoPeople();
     }
 
-    public function addAction($params)
+    public function addAction($data, $langT, $lang)
     {
         View::setMeta('Добавить капоэйриста');
     }
 
-    public function saveAction($params, $langT, $lang)
+    public function saveAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
-
         self::$model->attributes = [
             'apelido' => '',
             'name' => '',
@@ -39,15 +36,11 @@ class CapoPeopleController extends AppController
             'gender' => '',
         ];
 
-        if (!empty($params)) {
+        if (!empty($data)) {
 
-            if (isset($params['practiced'])) {
-                $params['practiced'] = 1;
-            } else {
-                $params['practiced'] = 0;
-            }
+            $data['practiced'] = (isset($data['practiced'])) ? 1 : 0;
 
-            self::$model->load($params);
+            self::$model->load($data);
             if (self::$model->save('capo_people')) {
                 $_SESSION['success'] = 'Капоэйрист успешно был добавлен.';
                 redirect('/admin/capo-people/add');

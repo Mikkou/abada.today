@@ -21,4 +21,27 @@ class AppController extends Controller
         $this->meta['desc'] = $desc;
         $this->meta['keywords'] = $keywords;
     }
+
+    protected function checkPermission($user = 'usual')
+    {
+        // check permission for trainer
+        if ($user === 'trainer') {
+
+            if (isset($_SESSION['user'])) {
+                if (!((int)$_SESSION['user']['rights'] >= 10)) {
+                    redirect();
+                }
+            } else {
+                redirect('/user/login');
+            }
+
+            // check permission for usual users
+        } else {
+
+            if (!isset($_SESSION['user'])) {
+                redirect('/user/login');
+            }
+
+        }
+    }
 }

@@ -25,10 +25,10 @@
                     <strong><?=$langT['organizer']?>:</strong> <?=$event['organizer']; ?>
                 </div>
             </div>
-            <?php if($category) {?>
+            <?php if($event['category_name']) {?>
                 <div class="row">
                     <div class="6u 12u$(medium)">
-                        <strong><?=$langT['category']?>:</strong> <?=$category; ?>
+                        <strong><?=$langT['category']?>:</strong> <?=mb_strtolower($event['category_name']); ?>
                     </div>
                 </div>
             <?php } ?>

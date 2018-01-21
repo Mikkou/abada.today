@@ -12,20 +12,20 @@ class PersonalController extends AppController
     public function __construct($route)
     {
         parent::__construct($route);
-        if (!isset($_SESSION['user'])) redirect('/');
+        $this->checkPermission();
         self::$model = new Personal();
     }
 
     public function indexAction($data, $langT, $lang)
     {
-        $data = self::$model->query("SELECT * FROM users WHERE id = {$_SESSION['user']['id']}")[0];
+        $data = self::$model->getPersonalData();
         View::setMeta($langT['own_cabinet']);
         $this->set(compact('data', 'langT', 'lang'));
     }
 
     public function editAction($data, $langT, $lang)
     {
-        $data = self::$model->query("SELECT * FROM users WHERE id = {$_SESSION['user']['id']}")[0];
+        $data = self::$model->getPersonalData();
         $this->set(compact('data', 'langT', 'lang'));
         View::setMeta($langT['edit_personal_data']);
     }
@@ -69,7 +69,7 @@ class PersonalController extends AppController
 
     public function myEventsAction($data, $langT, $lang)
     {
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
+        $this->checkPermission();
         $events = self::$model->getEvents($lang);
         View::setMeta($langT['my_events']);
         $this->set(compact('events', 'langT', 'lang'));
@@ -87,7 +87,7 @@ class PersonalController extends AppController
 
     public function myBranchesAction($data, $langT, $lang)
     {
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
+        $this->checkPermission();
         $branches = self::$model->getBranches($lang);
         View::setMeta($langT['my_branches']);
         $this->set(compact('branches', 'langT', 'lang'));
@@ -95,6 +95,7 @@ class PersonalController extends AppController
 
     public function deleteBranchAction($data, $langT, $lang)
     {
+        $this->checkPermission();
         if (empty($data) || (int)$data['id'] < 1) redirect();
         self::$model->deleteObj($data['id'], 'branches');
         $_SESSION['success'] = $langT['branch_was_successfully_delete'];
@@ -105,8 +106,8 @@ class PersonalController extends AppController
 
     public function editBranchAction($data, $langT, $lang)
     {
-        if (empty($params) || (int)$params['id'] < 1) redirect();
-        if (!isset($_SESSION['user'])) redirect('/');
+        $this->checkPermission();
+        if (empty($data) || (int)$data['id'] < 1) redirect();
 
         $branch = self::$model->getBranch($data['id'], $lang);
         $countries = self::$model->getAllCountries($lang, $branch['country_id']);
@@ -150,24 +151,7 @@ class PersonalController extends AppController
             ]
         ];
 
-        // for checking size of image
-        if (!empty($_FILES)) {
-            $data['image_size'] = $_FILES['image']['size'];
-            self::$model->attributes['image_size'] = '';
-        }
-
-        self::$model->load($data);
-
-        if (!self::$model->validate($data, $lang, $langT)) {
-            self::$model->getErrors();
-            $_SESSION['form_data'] = $data;
-            redirect();
-        }
-
-        if (isset(self::$model->attributes['image_size'])) {
-            unset(self::$model->attributes['image_size']);
-            unset($data['image_size']);
-        }
+        $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
         // if city is new -> saving him and get his id
         if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {
@@ -194,8 +178,8 @@ class PersonalController extends AppController
 
     public function editEventAction($data, $langT, $lang)
     {
+        $this->checkPermission();
         if (empty($data) || (int)$data['id'] < 1) redirect();
-        if (!isset($_SESSION['user'])) redirect('/');
 
         $event = self::$model->getEventById($data['id'], $lang);
         $countries = self::$model->getAllCountries($lang);
@@ -252,24 +236,7 @@ class PersonalController extends AppController
             ]
         ];
 
-        // for checking size of image
-        if (!empty($_FILES)) {
-            $data['image_size'] = $_FILES['image']['size'];
-            self::$model->attributes['image_size'] = '';
-        }
-
-        self::$model->load($data);
-
-        if (!self::$model->validate($data, $lang, $langT)) {
-            self::$model->getErrors();
-            $_SESSION['form_data'] = $data;
-            redirect();
-        }
-
-        if (isset(self::$model->attributes['image_size'])) {
-            unset(self::$model->attributes['image_size']);
-            unset($data['image_size']);
-        }
+        $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
         // check event type
         $data['event_type'] = (isset($data['event_type'])) ? 1 : 0;

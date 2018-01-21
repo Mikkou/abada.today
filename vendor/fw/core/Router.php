@@ -78,8 +78,15 @@ class Router
     public static function dispatch($url)
     {
         self::$registry = Registry::instance();
+
+        // unite get and post params
         $params = self::getParams($url);
-        $params['langText'] = self::getLangText($params);
+        $langText = self::getLangText($params['lang']);
+        $lang = $params['lang'];
+        unset($params['lang']);
+        unset($params['langT']);
+
+
         $url = self::removeQueryString($url);
         if (self::matchRoute($url)) {
             $controller = 'app\controllers\\' . self::$route['prefix'] . upperCamelCase(self::$route['controller'])
@@ -89,7 +96,7 @@ class Router
                 $cObj = new $controller(self::$route);
                 $action = lowerCamelCase(self::$route['action']) . 'Action';
                 if (method_exists($cObj, $action)) {
-                    $cObj->$action($params, $params['langText'], $params['lang']);
+                    $cObj->$action($params, $langText, $lang);
                     $cObj->getView();
                 } else {
                     throw new \Exception("Метод <b>$controller::$action</b> не найден", 404);
@@ -164,9 +171,9 @@ class Router
         return $params;
     }
 
-    protected static function getLangText($params)
+    protected static function getLangText($lang)
     {
-        $langText = require ROOT . "/public/lang/{$params['lang']}.php";
+        $langText = require ROOT . "/public/lang/{$lang}.php";
         return $langText;
     }
 

@@ -52,7 +52,7 @@ class Events extends Model
             ['house', 4],
             ['block', 3],
         ],
-        'max' => [
+        'maxImage' => [
             ['image_size', 500000]
         ]
     ];
@@ -155,34 +155,21 @@ class Events extends Model
         return $result;
     }
 
-    public function getEvent($id)
-    {
-        $data = $this->query("SELECT * FROM events WHERE begin_date > NOW() AND id = {$id} ORDER BY begin_date ASC");
-        // minor modified data
-        $result = [];
-        foreach ($data as $event) {
-            $event['image'] = ($event['image']) ? $event['image'] : '\public\images\pic01.jpg';
-            $beginDate = explode('-', $event['begin_date']);
-            $day = $beginDate[2];
-            $month = $this->getTextMonth($beginDate[1], true);
-            $year = $beginDate[0];
-            $event['begin_date'] = (int)$day . ' ' . $month . ' ' . $year;
-
-            $endDate = explode('-', $event['end_date']);
-            $day = $endDate[2];
-            $month = $this->getTextMonth($endDate[1], true);
-            $year = $endDate[0];
-            $event['end_date'] = (int)$day . ' ' . $month . ' ' . $year;
-
-            $event['name'] = (empty($event['name'])) ? 'Мероприятие' : $event['name'];
-
-            $result[] = $event;
-        }
-        return $result;
-    }
-
     public function getCities($id, $lang)
     {
         return $this->query("SELECT id, {$lang} AS name FROM cities WHERE country_id = {$id} ORDER BY {$lang}");
+    }
+
+    public function modifiedCat($cat)
+    {
+        $count = count($cat);
+        for ($i = 0; $i < $count; $i++) {
+            if ($i < 2) {
+                $cat[$i]['checked'] = 'checked';
+            } else {
+                $cat[$i]['checked'] = '';
+            }
+        }
+        return $cat;
     }
 }

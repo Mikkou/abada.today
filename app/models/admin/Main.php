@@ -6,19 +6,6 @@ use fw\core\base\Model;
 
 class Main extends Model
 {
-    public function login()
-    {
-        $login = !empty(trim($_POST['login'])) ? trim($_POST['login']) : null;
-        $password = !empty(trim($_POST['password'])) ? trim($_POST['password']) : null;
-        if ($login && $password) {
-            if ($login === 'Mikkou' && $password === 'mrmikkou1887555') {
-                $_SESSION['admin'] = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * @param $post - date from ajax
      * @return bool

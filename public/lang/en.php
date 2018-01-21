@@ -117,4 +117,10 @@ return [
 
     // user controller
     "restore_password" => "Restore password",
+
+    "you_really_want_delete_event" => "You really want to delete event?",
+    "you_really_want_delete_branch" => "You really want to delete branch?",
+
+    // valitron rule for image size
+    "image_need_be_max" => "need be maximum 500kb",
 ];

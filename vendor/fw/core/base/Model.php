@@ -29,6 +29,29 @@ abstract class Model
         }
     }
 
+    public function preparationValidationImage($data, $lang, $langT)
+    {
+        // for checking size of image
+        if (!empty($_FILES)) {
+            $data['image_size'] = $_FILES['image']['size'];
+            $this->attributes['image_size'] = '';
+        }
+
+        $this->load($data);
+        if (!$this->validate($data, $lang, $langT)) {
+            $this->getErrors();
+            $_SESSION['form_data'] = $data;
+            redirect();
+        }
+
+        if (isset($this->attributes['image_size'])) {
+            unset($this->attributes['image_size']);
+            unset($data['image_size']);
+        }
+
+        return $data;
+    }
+
     public function validate($data, $lang, $langT)
     {
         Validator::langDir(WWW . '/valitron/lang');
@@ -50,6 +73,13 @@ abstract class Model
             }
             return false;
         }, $langT['begin_date_need_be_less_that_end_date']);
+
+        $v->addRule('maxImage', function ($field, $value, array $params, array $fields) {
+            if ($params[0] > $value) {
+                return true;
+            }
+            return false;
+        }, $langT['image_need_be_max']);
         // <<<<<<<<<<<<<<<<<
 
         $v->rules($this->rules);
@@ -208,9 +238,10 @@ abstract class Model
                                         e.user_id, e.coord_x, e.coord_y, co.{$lang} AS country, ci.{$lang} AS city,
                                         co.id AS country_id, ci.id AS city_id,
                                         concat(co.{$lang}, ', ', ci.{$lang}, ', ', e.street, ', ', e.house,
-                                         '/', e.block) as address
+                                         '/', e.block) as address, ec.{$lang} AS category_name
             
             FROM events as e 
+            LEFT JOIN events_categories AS ec ON e.category = ec.id
             LEFT JOIN countries AS co ON e.country = co.id
             LEFT JOIN cities AS ci ON e.city = ci.id
             WHERE e.id = {$id}");

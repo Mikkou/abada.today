@@ -27,7 +27,7 @@ class UserController extends AppController
             }
             self::$model->attributes['password'] = password_hash(self::$model->attributes['password'], PASSWORD_DEFAULT);
             if (self::$model->save('users')) {
-                $data = self::$model->query("SELECT * FROM users WHERE email = '{$data['email']}'")[0];
+                $data = self::$model->getUserData($data);
                 $data = array_merge(self::$model->getCount($data['id']), $data);
                 $_SESSION['success'] = $langT['you_was_successfully_register'];
                 $_SESSION['user'] = $data;
@@ -42,7 +42,7 @@ class UserController extends AppController
 
     public function loginAction($data, $langT, $lang)
     {
-        if (!empty($_POST)) {
+        if (!empty($data)) {
             if (self::$model->login()) {
                 redirect('/');
             } else {

@@ -33,8 +33,6 @@ class Branches extends Model
         ],
         'url' => [
             ['link'],
-            // TODO not validate russian url, for example "http://капоэйра-детям.рф"
-//            ['site']
         ],
         'max' => [
             ['image_size', 500000]
@@ -45,7 +43,7 @@ class Branches extends Model
     {
         $data = $this->query("SELECT b.id, b.image, b.phone, b.link,
             concat(co.{$lang}, ', ', ci.{$lang}, ', ', b.street, ', ', b.house, '/', b.block) as address,
-                                         u.nickname, u.lastname, u.firstname, b.age_groups, b.site, schedule,
+                                         u.nickname, u.lastname, u.firstname, b.age_groups, b.site, b.schedule,
                                          b.curator, b.user_id, co.{$lang} AS country, ci.{$lang} AS city
             FROM branches as b 
             INNER JOIN users as u ON b.user_id = u.id

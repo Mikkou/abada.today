@@ -5,13 +5,13 @@ $().ready(function () {
     $('.alert').delay(8000).fadeOut();
 
     $('.delete-event').on('click', function () {
-        if (!confirm('Вы действительно хотите удалить событие?')) {
+        if (!confirm(LANG.you_really_want_delete_event)) {
             event.preventDefault();
         }
     });
 
     $('.delete-branch').on('click', function () {
-        if (!confirm('Вы действительно хотите удалить филиал?')) {
+        if (!confirm(LANG.you_really_want_delete_branch)) {
             event.preventDefault();
         }
     });
@@ -430,10 +430,10 @@ function loadCities() {
 
         success: function (data) {
             var html = '';
+            html += `<option value=""></option>`;
             data.forEach(function (v, k) {
                 html += `<option value="` + v.id + `">` + v.name + `</option>`;
             });
-            html += `<option value=""></option>`;
             html += `<option value="another">....` + LANG.add_another + `....</option>`;
 
             $('select#city').html(html);

@@ -18,33 +18,7 @@ class MainController extends AppController
 
     public function indexAction($data, $langT, $lang)
     {
-        // check auth
-        if (!isset($_SESSION['user'])) redirect('/user/login');
-        if (isset($_SESSION['admin'])) {
-            View::setMeta('Админка :: Главная страница');
-        } else {
-            View::setMeta('Админка :: Авторизация');
-            redirect('/admin/main/login');
-        }
-    }
-
-    public function loginAction($data, $langT, $lang)
-    {
-        if (!empty($_POST)) {
-            if (self::$model->login()) {
-                $_SESSION['success'] = 'Вы успешно авторизованы.';
-            } else {
-                $_SESSION['error'] = 'Логин/пароль введены неверно.';
-            }
-            redirect('/admin');
-        }
-        View::setMeta('Вход');
-    }
-
-    public function logoutAction($data, $langT, $lang)
-    {
-        if (isset($_SESSION['admin'])) unset($_SESSION['admin']);
-        redirect('/');
+        View::setMeta('Админка :: Главная страница');
     }
 
     public function changeDataAction($post, $langT, $lang)
@@ -55,7 +29,6 @@ class MainController extends AppController
 
     public function usersAction($data, $langT, $lang)
     {
-        if (!isset($_SESSION['user'])) redirect('/main/login');
         $data = self::$model->getUsers();
         View::setMeta('Пользователи');
         $this->set(compact('data'));

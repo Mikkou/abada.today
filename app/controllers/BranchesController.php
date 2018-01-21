@@ -33,26 +33,11 @@ class BranchesController extends AppController
 
     public function addAction($data, $langT, $lang)
     {
-        if ((int)$_SESSION['user']['rights'] < 10) redirect();
+        $this->checkPermission('trainer');
+
         if (isset($data['country'])) {
 
-            // for checking size of image
-            if (!empty($_FILES)) {
-                $data['image_size'] = $_FILES['image']['size'];
-                self::$model->attributes['image_size'] = '';
-            }
-
-            self::$model->load($data);
-            if (!self::$model->validate($data, $lang, $langT)) {
-                self::$model->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
-
-            if (isset(self::$model->attributes['image_size'])) {
-                unset(self::$model->attributes['image_size']);
-                unset($data['image_size']);
-            }
+            $data = self::$model->preparationValidationImage($data, $lang, $langT);
 
             // if city is new -> saving him and get his id
             if (isset($data['city']) && strpos($data['city'], 'new_') === 0) {

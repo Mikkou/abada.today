@@ -8,21 +8,7 @@ class Branches extends Model
 {
     public $table = 'branches';
 
-    public $attributes = [
-        'country' => '',
-        'city' => '',
-        'street' => '',
-        'house' => '',
-        'block' => '',
-        'curator' => '',
-        'image' => '',
-        'phone' => '',
-        'link' => '',
-        'age_groups' => '',
-        'site' => '',
-        'schedule' => '',
-        'user_id' => '',
-    ];
+    public $attributes;
 
     public $rules = [
         'required' => [
@@ -34,7 +20,6 @@ class Branches extends Model
         ],
         'url' => [
             ['link'],
-            ['site']
         ],
         'max' => [
             ['image_size', 500000]

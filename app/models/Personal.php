@@ -41,4 +41,9 @@ class Personal extends Model
         $this->query("UPDATE users SET password = '{$passHash}' WHERE id = '{$id}'");
         return true;
     }
+
+    public function getPersonalData()
+    {
+        return $this->query("SELECT * FROM users WHERE id = {$_SESSION['user']['id']}")[0];
+    }
 }
