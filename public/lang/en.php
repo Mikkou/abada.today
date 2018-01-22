@@ -110,7 +110,7 @@ return [
     "branch" => "Branch",
 
     // home page
-    "home" => "Главная",
+    "home" => "Home",
 
     // personal controller
     "edit_personal_data" => "Edit personal data",
