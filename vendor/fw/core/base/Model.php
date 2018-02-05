@@ -281,7 +281,7 @@ abstract class Model
         if ($without) {
             $sql = "SELECT id, {$lang} FROM countries WHERE id != {$without} ORDER BY {$lang}";
         } else {
-            $sql = "SELECT id, {$lang} FROM countries ORDER BY {$lang}";
+            $sql = "SELECT id, {$lang} FROM countries ORDER BY ru";
         }
         $data = $this->query($sql);
         return $data;

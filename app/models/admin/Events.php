@@ -38,7 +38,7 @@ class Events extends Model
 
     public function getEventsData()
     {
-        return $this->query("SELECT * FROM events WHERE begin_date > NOW() ORDER BY begin_date ASC");
+        return $this->query("SELECT * FROM events ORDER BY begin_date ASC");
     }
 
     public function deleteEvent($id)
