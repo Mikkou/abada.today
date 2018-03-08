@@ -38,7 +38,20 @@ class Events extends Model
 
     public function getEventsData()
     {
-        return $this->query("SELECT * FROM events ORDER BY begin_date ASC");
+        $data = $this->query("SELECT * FROM events ORDER BY begin_date ASC");
+//        dump($data);
+
+        $count = count($data);
+        for ($i = 0; $i < $count; $i++) {
+            $date = $data[$i]['begin_date'];
+            $dateAr = explode('-', $date);
+            $month = $this->getTextMonth($dateAr[1], true);
+            $data[$i]['begin_date'] = $dateAr[2] . ' ' . $month;
+
+
+        }
+
+        return $data;
     }
 
     public function deleteEvent($id)

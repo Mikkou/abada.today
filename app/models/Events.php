@@ -111,50 +111,6 @@ class Events extends Model
         return $result;
     }
 
-    protected function getTextMonth($number, $modified)
-    {
-        $result = '';
-        switch ($number) {
-            case '1':
-                $result = ($modified) ? 'января' : 'январь';
-                break;
-            case '2':
-                $result = ($modified) ? 'февраля' : 'февраль';
-                break;
-            case '3':
-                $result = ($modified) ? 'марта' : 'март';
-                break;
-            case '4':
-                $result = ($modified) ? 'апреля' : 'апрель';
-                break;
-            case '5':
-                $result = ($modified) ? 'мая' : 'май';
-                break;
-            case '6':
-                $result = ($modified) ? 'июня' : 'июнь';
-                break;
-            case '7':
-                $result = ($modified) ? 'июля' : 'июнь';
-                break;
-            case '8':
-                $result = ($modified) ? 'августа' : 'август';
-                break;
-            case '9':
-                $result = ($modified) ? 'сентября' : 'сентябрь';
-                break;
-            case '10':
-                $result = ($modified) ? 'октября' : 'октябрь';
-                break;
-            case '11':
-                $result = ($modified) ? 'ноября' : 'ноябрь';
-                break;
-            case '12':
-                $result = ($modified) ? 'декабря' : 'декабрь';
-                break;
-        }
-        return $result;
-    }
-
     public function getCities($id, $lang)
     {
         return $this->query("SELECT id, {$lang} AS name FROM cities WHERE country_id = {$id} ORDER BY {$lang}");
