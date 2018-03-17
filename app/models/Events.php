@@ -68,7 +68,7 @@ class Events extends Model
             FROM events AS e
             LEFT JOIN cities AS ci ON ci.id = e.city
             LEFT JOIN countries AS co ON co.id = e.country
-            WHERE begin_date > NOW() AND coord_x IS NOT NULL AND (category = 0 OR category = 1) ORDER BY begin_date ASC");
+            WHERE end_date > NOW() AND coord_x IS NOT NULL AND (category = 0 OR category = 1) ORDER BY begin_date ASC");
 
         } else {
 
@@ -91,7 +91,7 @@ class Events extends Model
             FROM events AS e
             LEFT JOIN cities AS ci ON ci.id = e.city
             LEFT JOIN countries AS co ON co.id = e.country
-            WHERE begin_date > NOW() AND coord_x IS NOT NULL AND ({$str}) ORDER BY begin_date ASC");
+            WHERE end_date > NOW() AND coord_x IS NOT NULL AND ({$str}) ORDER BY begin_date ASC");
         }
 
         // minor modified data
