@@ -4334,3 +4334,8 @@ input[type="date"] {
 .lang-setting:hover {
 	cursor: pointer;
 }
+
+.how-can-support__list {
+	list-style-type: none;
+	padding: 0;
+}

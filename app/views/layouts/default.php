@@ -98,8 +98,12 @@
             <?php require_once APP . "/views/layouts/components/menu.php"?>
             <!-- Footer -->
             <footer id="footer">
-                <div class="pay">
-                    <a href="https://money.yandex.ru/to/410014028917759"><?=$langT['donate']?></a>
+                <div class="how-can-support">
+                    <h5><?=$langT['how_can_support__title']?>:</h5>
+                    <ul class="how-can-support__list">
+                        <li><a href="https://vk.com/iamabada" class="icon fa-vk"> <?=$langT['subscribe_on_channel']?></a></li>
+                        <li><a href="https://github.com/Mikkou/abada.today.old" class="icon fa-github"> <?=$langT['put_star_on_github']?></a></li>
+                    </ul>
                 </div>
                 <p class="copyright">&copy; <?=$langT['rights']?></p>
             </footer>

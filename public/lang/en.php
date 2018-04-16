@@ -123,4 +123,12 @@ return [
 
     // valitron rule for image size
     "image_need_be_max" => "need be maximum 500kb",
+
+
+    // how can support
+    "how_can_support__title" => "How you can support project",
+    "subscribe_on_channel" => "subscribe on channel",
+    "put_star_on_github" => "put a star on github",
+
+
 ];
